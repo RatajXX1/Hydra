@@ -1,0 +1,23 @@
+.Hydra_Buttons_iconbutton {
+    position: relative;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 25px;
+    height: auto;
+    svg {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        fill: rgba(30, 30, 30, 0.44);
+        transition: .2s;
+    }
+
+    &:hover {
+        svg {
+            fill: rgba(30, 30, 30, 0.24);
+        }
+    }
+}

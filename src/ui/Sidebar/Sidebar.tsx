@@ -1,0 +1,49 @@
+import React from "react";
+import "./Sidebar.scss";
+import { IconButton } from "../Buttons/Buttons";
+import {ReactComponent as FilesIcon} from "../../Images/files.svg";
+import {ReactComponent as CalendarIcon} from "../../Images/calendar.svg";
+import {ReactComponent as ProjectsIcon} from "../../Images/projects.svg";
+import {ReactComponent as ListIcon} from "../../Images/list.svg";
+import {ReactComponent as SettingsIcon} from "../../Images/settings.svg";
+import {ReactComponent as SearchIcon} from "../../Images/search.svg";
+
+class SideBar extends React.Component {
+
+    render(): React.ReactNode {
+        return (
+            <div className="Hydra_Sidebar_main">
+                <div className="Hydra_Sidebar_functions">
+                    <div>
+                        <IconButton
+                            Icon={FilesIcon}
+                        />
+                        <IconButton
+                            Icon={CalendarIcon}
+                        />
+                        <IconButton
+                            Icon={ProjectsIcon}
+                        />
+                        <IconButton
+                            Icon={ListIcon}
+                        />
+                    </div> 
+                    <div>
+                        <IconButton
+                            Icon={SearchIcon}
+                        />
+                        <IconButton
+                            Icon={SettingsIcon}
+                        />
+                    </div> 
+                </div>
+                <div className="Hydra_Sidebar_workarea">
+
+                </div>
+            </div>
+        )
+    }
+
+}
+
+export default SideBar;
