@@ -2,6 +2,7 @@ import React from "react";
 import "./WorkArea.scss";
 import {ReactComponent as CloseIcon} from "../../Images/close.svg";
 import { IconButton } from "../Buttons/Buttons";
+import { RichEditor } from "../RichEditor/Richeditor";
 
 class TabSystem extends React.Component {
     state = {
@@ -11,7 +12,6 @@ class TabSystem extends React.Component {
             }
         ]
     };
-
 
     render(): React.ReactNode {
         return (
@@ -31,9 +31,23 @@ class TabSystem extends React.Component {
                             Icon={CloseIcon}
                         />
                     </div>
+                    <div className="Hydra_Tabs_tabs_item Hydra_Tabs_tabs_item_inactive">
+                        <a>Notatka #1</a>
+                        <div></div>
+                        <IconButton
+                            Icon={CloseIcon}
+                        />
+                    </div>
+                    <div className="Hydra_Tabs_tabs_item Hydra_Tabs_tabs_item_inactive">
+                        <a>Notatka #1</a>
+                        <div></div>
+                        <IconButton
+                            Icon={CloseIcon}
+                        />
+                    </div>
                 </div>
                 <div className="Hydra_Tabs_workarea">
-
+                    <RichEditor/>
                 </div>
             </div>
         )

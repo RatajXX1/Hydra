@@ -20,11 +20,9 @@
         position: relative;
         box-sizing: border-box;
         padding: 0 15px 0 5px;
-        // top: 1px;
         background-color: white; 
         min-width: 120px;
         height: 34px;
-
 
         button {
             position: absolute;
@@ -59,7 +57,6 @@
         }
 
     }
-
 
 }
 
@@ -106,4 +103,5 @@
 .Hydra_Tabs_tabs_item_inactive {
     border-right: 0.5px solid rgba(12, 12, 12, 0.16);
     background-color: transparent !important;
+    margin-left: 10px;
 }
