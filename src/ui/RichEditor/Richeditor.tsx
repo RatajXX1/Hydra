@@ -7,13 +7,10 @@ import {ReactComponent as UnderlineIcon} from "../../Images/underline.svg";
 import {ReactComponent as StrikeIcon} from "../../Images/strike.svg";
 import {ReactComponent as LinkIcon} from "../../Images/link.svg";
 import { Select } from "../Inputs/Inputs";
+import ReactDOM from 'react-dom';
 
 class RichEditor extends React.Component {
-    placholder = `
-        <div class="Hydra_Richeditor_editor_placeholder">
-            Zacznij pisać ...
-        </div>    
-    `
+    placholder = <div className="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>
     
     editorRef = React.createRef<HTMLDivElement>()
     textOptionsRef = React.createRef<HTMLDivElement>()
@@ -22,21 +19,6 @@ class RichEditor extends React.Component {
         text: "",
         
     };
-
-    getCaretPosition = (node: Node, offset: number) => {
-        let position = offset;
-        const treeWalker = document.createTreeWalker(
-          node.parentNode!,
-          NodeFilter.SHOW_TEXT,
-          null as any,
-        );
-        let currentNode = node;
-        while (currentNode !== treeWalker.currentNode) {
-          currentNode = treeWalker.nextNode()!;
-          position += currentNode.textContent!.length;
-        }
-        return position;
-      };
 
     handleSelectionChange = () => {
         const selection = window.getSelection();
@@ -62,6 +44,26 @@ class RichEditor extends React.Component {
         }
     };
 
+    onFoucs = () => {
+        if (this.editorRef.current) {
+            let placeholder = this.editorRef.current.querySelector(".Hydra_Richeditor_editor_placeholder")
+            if (placeholder != null) {
+                placeholder.remove()
+            }
+        }
+    }
+
+    onBlur = () => {
+        if (this.editorRef.current && this.editorRef.current.innerText.replaceAll("\n", "") == "") {
+            const placeholderNode = document.createElement("div")
+            this.editorRef.current.innerText = ""
+            ReactDOM.render(
+                this.placholder,
+                placeholderNode
+            )
+            this.editorRef.current.appendChild(placeholderNode)
+        }
+    }
 
     render(): React.ReactNode {
         return (
@@ -97,7 +99,8 @@ class RichEditor extends React.Component {
                     ref={this.editorRef}
                     className="Hydra_Richeditor_editor" 
                     contentEditable
-                    // onKeyDown={this.handleSelectionChange.bind(this)}
+                    onFocus={this.onFoucs.bind(this)}
+                    onBlur={this.onBlur.bind(this)}
                     onSelect={this.handleSelectionChange.bind(this)}
                 >
                     <div className="Hydra_Richeditor_editor_placeholder">
