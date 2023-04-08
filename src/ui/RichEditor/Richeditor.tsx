@@ -14,9 +14,10 @@ class RichEditor extends React.Component {
     
     editorRef = React.createRef<HTMLDivElement>()
     textOptionsRef = React.createRef<HTMLDivElement>()
+    commmandPrompt = React.createRef<HTMLDivElement>()
 
     state = {
-        text: "",
+        LastWord: "",
         
     };
 
@@ -65,6 +66,55 @@ class RichEditor extends React.Component {
         }
     }
 
+    CommandStart = () => { 
+        const selection = window.getSelection();     
+        if (this.editorRef.current && selection) {
+            const text = this.editorRef.current.innerText;
+            if (text == null) return
+            // Find the position of the cursor
+            const range = selection.getRangeAt(0);
+            let currentPosition = range.startOffset;  
+            let rects = range.getClientRects()
+            const lastRect = rects[rects.length - 1];
+            if (lastRect == undefined) return
+            const editorRect = this.editorRef.current!.getBoundingClientRect();
+            const textOptionsRect = this.textOptionsRef.current!.getBoundingClientRect();
+            const left = lastRect.left - editorRect.left + this.editorRef.current!.scrollLeft;
+            const maxWidth = editorRect.width - textOptionsRect.width;
+            const position = {
+                left: Math.min(Math.max(left, 0), maxWidth),
+            };
+            this.state.LastWord = this.getLastWordInContentEditableDiv()
+            if (rects[0] != undefined && lastRect != undefined && this.state.LastWord != "") {
+                // console.log("Slowo", this.getLastWordInContentEditableDiv(), "POS X" , currentPosition, "POX Y", rects[0].y)
+                if (this.commmandPrompt.current) {
+                    this.commmandPrompt.current.style.display = "block"
+                    this.commmandPrompt.current.style.left = `${position.left}px` 
+                    this.commmandPrompt.current.style.top = `${rects[0].y - 30}px`
+
+                }
+            }
+        }
+
+    }
+
+    getLastWordInContentEditableDiv(): string {
+        const sel = window.getSelection();
+        let div = document.querySelector(".Hydra_Richeditor_editor")
+        // Sprawdź, czy wybrano tekst w contenteditable div
+        if (sel && sel.rangeCount > 0 && this.editorRef.current && div) {
+            const range = sel.getRangeAt(0).cloneRange();
+            range.collapse(true);
+            if (range == null || !range.startContainer.textContent) return ""
+            else  {
+                const precedingText = range.startContainer.textContent.slice(0, range.startOffset).split(/[\s]+/);
+                return precedingText[precedingText.length - 1]
+            }
+        }
+      
+        return "";
+    }
+
     render(): React.ReactNode {
         return (
             <div 
@@ -95,6 +145,13 @@ class RichEditor extends React.Component {
                     <Select/>
                 </div>
 
+                <div
+                    ref={this.commmandPrompt}
+                    className="Hydra_Richeditor_textOptions"
+                >
+                    Command Prompt
+                </div>
+
                 <div 
                     ref={this.editorRef}
                     className="Hydra_Richeditor_editor" 
@@ -102,6 +159,8 @@ class RichEditor extends React.Component {
                     onFocus={this.onFoucs.bind(this)}
                     onBlur={this.onBlur.bind(this)}
                     onSelect={this.handleSelectionChange.bind(this)}
+                    onInput={this.CommandStart.bind(this)}
+
                 >
                     <div className="Hydra_Richeditor_editor_placeholder">
                         Zacznij pisać ...
