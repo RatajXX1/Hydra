@@ -18,8 +18,8 @@ class RichEditor extends React.Component {
 
     state = {
         LastWord: "",
-        
     };
+
 
     handleSelectionChange = () => {
         const selection = window.getSelection();
@@ -88,10 +88,10 @@ class RichEditor extends React.Component {
             if (rects[0] != undefined && lastRect != undefined && this.state.LastWord != "") {
                 // console.log("Slowo", this.getLastWordInContentEditableDiv(), "POS X" , currentPosition, "POX Y", rects[0].y)
                 if (this.commmandPrompt.current) {
-                    this.commmandPrompt.current.style.display = "block"
+                    // this.commmandPrompt.current.style.display = "block"
                     this.commmandPrompt.current.style.left = `${position.left}px` 
                     this.commmandPrompt.current.style.top = `${rects[0].y - 30}px`
-
+                    this.forceUpdate()
                 }
             }
         }
@@ -100,9 +100,8 @@ class RichEditor extends React.Component {
 
     getLastWordInContentEditableDiv(): string {
         const sel = window.getSelection();
-        let div = document.querySelector(".Hydra_Richeditor_editor")
         // Sprawdź, czy wybrano tekst w contenteditable div
-        if (sel && sel.rangeCount > 0 && this.editorRef.current && div) {
+        if (sel && sel.rangeCount > 0 && this.editorRef.current) {
             const range = sel.getRangeAt(0).cloneRange();
             range.collapse(true);
             if (range == null || !range.startContainer.textContent) return ""
@@ -149,7 +148,9 @@ class RichEditor extends React.Component {
                     ref={this.commmandPrompt}
                     className="Hydra_Richeditor_textOptions"
                 >
-                    Command Prompt
+                    {
+                        this.state.LastWord
+                    }
                 </div>
 
                 <div 

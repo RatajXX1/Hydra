@@ -7,8 +7,11 @@ import {ReactComponent as ProjectsIcon} from "../../Images/projects.svg";
 import {ReactComponent as ListIcon} from "../../Images/list.svg";
 import {ReactComponent as SettingsIcon} from "../../Images/settings.svg";
 import {ReactComponent as SearchIcon} from "../../Images/search.svg";
+import { RichEditor } from "../RichEditor/Richeditor";
 
 class SideBar extends React.Component {
+
+    count = 1
 
     render(): React.ReactNode {
         return (
@@ -17,9 +20,27 @@ class SideBar extends React.Component {
                     <div>
                         <IconButton
                             Icon={FilesIcon}
+                            OnClick={() => {
+                                if (window.addTab !== undefined) {
+                                    this.count += 1
+                                    window.addTab(
+                                        "Notatka z SIDE",
+                                        <RichEditor/>
+                                    )
+                                }
+                            }}
                         />
                         <IconButton
                             Icon={CalendarIcon}
+                            OnClick={() => {
+                                if (window.addTab !== undefined) {
+                                    this.count += 1
+                                    window.addTab(
+                                        "Notatka z SIDE",
+                                        <RichEditor/>
+                                    )
+                                }
+                            }}
                         />
                         <IconButton
                             Icon={ProjectsIcon}
