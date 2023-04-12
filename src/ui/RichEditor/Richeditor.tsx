@@ -18,8 +18,16 @@ class RichEditor extends React.Component {
 
     state = {
         LastWord: "",
+        Content: `<div class="Hydra_Richeditor_editor_placeholder">
+        Zacznij pisać ...
+    </div>`
     };
 
+    componentWillUnmount(): void {
+        if (this.editorRef.current) {
+            this.state.Content = this.editorRef.current.innerHTML
+        }
+    }
 
     handleSelectionChange = () => {
         const selection = window.getSelection();
@@ -161,12 +169,17 @@ class RichEditor extends React.Component {
                     onBlur={this.onBlur.bind(this)}
                     onSelect={this.handleSelectionChange.bind(this)}
                     onInput={this.CommandStart.bind(this)}
-
+                    dangerouslySetInnerHTML={{__html: this.state.Content}}
                 >
-                    <div className="Hydra_Richeditor_editor_placeholder">
-                        Zacznij pisać ...
-                    </div>    
-                    
+{/* 
+                    {
+                        this.state.Content.trim().length === 0 && <div className="Hydra_Richeditor_editor_placeholder">
+                            Zacznij pisać ...
+                        </div>
+                    } */}
+                    {/* {
+                        this.state.Content.trim().length !== 0 && this.state.Content
+                    } */}
                 </div>
             </div>
         )
