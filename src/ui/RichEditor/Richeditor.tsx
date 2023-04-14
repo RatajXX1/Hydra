@@ -11,14 +11,16 @@ import ReactDOM from 'react-dom';
 
 class RichEditor extends React.Component {
     placholder = <div className="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>
-    
     editorRef = React.createRef<HTMLDivElement>()
     textOptionsRef = React.createRef<HTMLDivElement>()
     commmandPrompt = React.createRef<HTMLDivElement>()
 
     state = {
         LastWord: "",
-        Content: `<div class="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>`
+        Content: `<div class="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>`,
+        SeletedTextInfo: {
+            Bold: false
+        }
     };
 
     componentWillUnmount(): void {
@@ -43,6 +45,7 @@ class RichEditor extends React.Component {
             top: Math.min(Math.max(top, 0), maxHeight),
             left: Math.min(Math.max(left, 0), maxWidth),
           };
+          this.GetSelectedTextInfo()
           this.textOptionsRef.current!.style.display = "flex";
           this.textOptionsRef.current!.style.top = `${position.top + 30}px`;
           this.textOptionsRef.current!.style.left = `${position.left}px`;
@@ -104,6 +107,11 @@ class RichEditor extends React.Component {
 
     }
 
+    GetSelectedTextInfo() {
+        this.state.SeletedTextInfo.Bold = this.IsStyled("Hydra_Richeditor_editor_bold")
+        this.forceUpdate()
+    }
+
     getLastWordInContentEditableDiv(): string {
         const sel = window.getSelection();
         // Sprawdź, czy wybrano tekst w contenteditable div
@@ -121,19 +129,6 @@ class RichEditor extends React.Component {
     }
 
     SetInTag(tag:string, classname?: string ) {
-        // const selection = window.getSelection();
-        // if (selection) {
-        //     const range = selection.getRangeAt(0);
-        //     const newElement = document.createElement(tag);
-        //     if (classname) newElement.className = classname
-        //     newElement.appendChild(document.createTextNode(range.toString()));
-        //     range.deleteContents();
-        //     range.insertNode(newElement);
-        //     range.setEndAfter(newElement)
-        //     selection.removeAllRanges();
-        //     selection.addRange(range); 
-        //     console.log("OOO ",range.startContainer.nextSibling)
-        // }
         const selection = window.getSelection();
         if (selection) {
             const range = selection.getRangeAt(0);
@@ -147,7 +142,6 @@ class RichEditor extends React.Component {
             newRange.setEnd(range.endContainer, range.endOffset);
             selection.removeAllRanges();
             selection.addRange(newRange);
-            console.log("OOO ", newRange.startContainer);
         }
     }
 
@@ -163,26 +157,27 @@ class RichEditor extends React.Component {
         }
     }
 
-    IsStyled(type: string, classname?: string): boolean {
-        const selection = window.getSelection();
-        if (selection) {
-            const range = selection.getRangeAt(0);
-            // console.log(range.startContainer.nextSibling)
-            if (range.startContainer) {
-                const el = range.startContainer as HTMLElement
-                // console.log("taki",el)
-                if (classname) {
-                    if (
-                        range.startContainer.nodeName.toLowerCase() === type &&
-                        el.classList.contains(classname)
-                    ) return true
-                } else {
-                    if (range.startContainer.nodeName.toLowerCase() === type) return true
-                }
-            }
-            return false
+
+    IsStyled(classname: string): boolean {
+        var range;
+        if (window.getSelection) {
+          var selection = window.getSelection();
+          if (selection && selection.rangeCount > 0) {
+            range = selection.getRangeAt(0);
+            var clonedSelection = range.cloneContents();
+            var div = document.createElement('div');
+            div.appendChild(clonedSelection);
+            // return div.firstChildo;
+            if (div.firstElementChild) return div.firstElementChild?.classList.contains(classname)
+            else return false;
+          }
+          else {
+            return false;
+          }
         }
-        return false;
+        else {
+          return false;
+        }
     }
 
     render(): React.ReactNode {
@@ -200,12 +195,13 @@ class RichEditor extends React.Component {
                     <IconButton
                         Icon={BoldIcon}
                         OnClick={() => {
-                            let isBold = this.IsStyled("a", "Hydra_Richeditor_editor_bold")
+                            let isBold = this.IsStyled("Hydra_Richeditor_editor_bold")
                             // console.log("Jest ",isBold)
                             if (!isBold) 
                                 this.SetInTag("a", "Hydra_Richeditor_editor_bold")
                             else this.ClearTag()
                         }}
+                        Seleted={this.state.SeletedTextInfo.Bold}
                     />
                     <IconButton
                         Icon={italicIcon}

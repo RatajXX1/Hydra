@@ -1,11 +1,18 @@
 import React, { FunctionComponent } from "react";
 import "./Buttons.scss";
 
-function IconButton(props: {Icon: FunctionComponent, style?: Object | undefined, OnClick?: () => void}) {
+type ButtonProps = {
+    Icon: FunctionComponent, 
+    style?: Object | undefined, 
+    OnClick?: () => void,
+    Seleted?: boolean
+}
+
+function IconButton(props: ButtonProps) {
     return (
         <button 
             style={props.style != undefined ? props.style : undefined} 
-            className="Hydra_Buttons_iconbutton"
+            className={"Hydra_Buttons_iconbutton" + (props.Seleted? " Hydra_Buttons_iconbutton_selected" : "")}
             onClick={props.OnClick}
         >
             <props.Icon />
