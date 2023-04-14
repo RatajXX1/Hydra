@@ -18,9 +18,7 @@ class RichEditor extends React.Component {
 
     state = {
         LastWord: "",
-        Content: `<div class="Hydra_Richeditor_editor_placeholder">
-        Zacznij pisać ...
-    </div>`
+        Content: `<div class="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>`
     };
 
     componentWillUnmount(): void {
@@ -122,6 +120,71 @@ class RichEditor extends React.Component {
         return "";
     }
 
+    SetInTag(tag:string, classname?: string ) {
+        // const selection = window.getSelection();
+        // if (selection) {
+        //     const range = selection.getRangeAt(0);
+        //     const newElement = document.createElement(tag);
+        //     if (classname) newElement.className = classname
+        //     newElement.appendChild(document.createTextNode(range.toString()));
+        //     range.deleteContents();
+        //     range.insertNode(newElement);
+        //     range.setEndAfter(newElement)
+        //     selection.removeAllRanges();
+        //     selection.addRange(range); 
+        //     console.log("OOO ",range.startContainer.nextSibling)
+        // }
+        const selection = window.getSelection();
+        if (selection) {
+            const range = selection.getRangeAt(0);
+            const newElement = document.createElement(tag);
+            if (classname) newElement.className = classname;
+            newElement.appendChild(document.createTextNode(range.toString()));
+            range.deleteContents();
+            range.insertNode(newElement);
+            const newRange = document.createRange();
+            newRange.setStart(newElement as Node, 0);
+            newRange.setEnd(range.endContainer, range.endOffset);
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+            console.log("OOO ", newRange.startContainer);
+        }
+    }
+
+    ClearTag() {
+        const selection = window.getSelection();
+        if (selection) {
+            const range = selection.getRangeAt(0);
+            const newElement = document.createTextNode(range.toString());
+            range.deleteContents();
+            range.insertNode(newElement);
+            selection.removeAllRanges();
+            selection.addRange(range); 
+        }
+    }
+
+    IsStyled(type: string, classname?: string): boolean {
+        const selection = window.getSelection();
+        if (selection) {
+            const range = selection.getRangeAt(0);
+            // console.log(range.startContainer.nextSibling)
+            if (range.startContainer) {
+                const el = range.startContainer as HTMLElement
+                // console.log("taki",el)
+                if (classname) {
+                    if (
+                        range.startContainer.nodeName.toLowerCase() === type &&
+                        el.classList.contains(classname)
+                    ) return true
+                } else {
+                    if (range.startContainer.nodeName.toLowerCase() === type) return true
+                }
+            }
+            return false
+        }
+        return false;
+    }
+
     render(): React.ReactNode {
         return (
             <div 
@@ -136,6 +199,13 @@ class RichEditor extends React.Component {
                 >
                     <IconButton
                         Icon={BoldIcon}
+                        OnClick={() => {
+                            let isBold = this.IsStyled("a", "Hydra_Richeditor_editor_bold")
+                            // console.log("Jest ",isBold)
+                            if (!isBold) 
+                                this.SetInTag("a", "Hydra_Richeditor_editor_bold")
+                            else this.ClearTag()
+                        }}
                     />
                     <IconButton
                         Icon={italicIcon}
@@ -171,15 +241,7 @@ class RichEditor extends React.Component {
                     onInput={this.CommandStart.bind(this)}
                     dangerouslySetInnerHTML={{__html: this.state.Content}}
                 >
-{/* 
-                    {
-                        this.state.Content.trim().length === 0 && <div className="Hydra_Richeditor_editor_placeholder">
-                            Zacznij pisać ...
-                        </div>
-                    } */}
-                    {/* {
-                        this.state.Content.trim().length !== 0 && this.state.Content
-                    } */}
+
                 </div>
             </div>
         )
