@@ -9,6 +9,13 @@ import {ReactComponent as LinkIcon} from "../../Images/link.svg";
 import { Select } from "../Inputs/Inputs";
 import ReactDOM from 'react-dom';
 
+type StyledClass = {
+    Hydra_Richeditor_editor_bold : boolean,
+    Hydra_Richeditor_editor_italic : boolean,
+    Hydra_Richeditor_editor_underline : boolean,
+    Hydra_Richeditor_editor_strike : boolean,
+}
+
 class RichEditor extends React.Component {
     placholder = <div className="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>
     editorRef = React.createRef<HTMLDivElement>()
@@ -18,9 +25,12 @@ class RichEditor extends React.Component {
     state = {
         LastWord: "",
         Content: `<div class="Hydra_Richeditor_editor_placeholder">Zacznij pisać ...</div>`,
-        SeletedTextInfo: {
-            Bold: false
-        }
+        SeletedTextInfo: {            
+            Hydra_Richeditor_editor_bold: false,
+            Hydra_Richeditor_editor_italic: false,
+            Hydra_Richeditor_editor_underline: false,
+            Hydra_Richeditor_editor_strike: false,
+        } as StyledClass
     };
 
     componentWillUnmount(): void {
@@ -45,7 +55,9 @@ class RichEditor extends React.Component {
             top: Math.min(Math.max(top, 0), maxHeight),
             left: Math.min(Math.max(left, 0), maxWidth),
           };
-          this.GetSelectedTextInfo()
+        //   this.GetSelectedTextInfo()
+          this.state.SeletedTextInfo = this.IsStyled()
+          this.forceUpdate()
           this.textOptionsRef.current!.style.display = "flex";
           this.textOptionsRef.current!.style.top = `${position.top + 30}px`;
           this.textOptionsRef.current!.style.left = `${position.left}px`;
@@ -107,11 +119,6 @@ class RichEditor extends React.Component {
 
     }
 
-    GetSelectedTextInfo() {
-        this.state.SeletedTextInfo.Bold = this.IsStyled("Hydra_Richeditor_editor_bold")
-        this.forceUpdate()
-    }
-
     getLastWordInContentEditableDiv(): string {
         const sel = window.getSelection();
         // Sprawdź, czy wybrano tekst w contenteditable div
@@ -128,12 +135,20 @@ class RichEditor extends React.Component {
         return "";
     }
 
-    SetInTag(tag:string, classname?: string ) {
+    SetInTag(classname?: string ) {
         const selection = window.getSelection();
         if (selection) {
             const range = selection.getRangeAt(0);
-            const newElement = document.createElement(tag);
-            if (classname) newElement.className = classname;
+            const newElement = document.createElement("a");
+            if (classname) {
+                Object.keys(this.state.SeletedTextInfo).forEach(
+                    e => {
+                        if (this.state.SeletedTextInfo[e as keyof StyledClass]) 
+                            newElement.classList.add(e as keyof StyledClass)
+                    }
+                )
+                newElement.classList.add(classname)
+            }
             newElement.appendChild(document.createTextNode(range.toString()));
             range.deleteContents();
             range.insertNode(newElement);
@@ -158,8 +173,14 @@ class RichEditor extends React.Component {
     }
 
 
-    IsStyled(classname: string): boolean {
+    IsStyled(): StyledClass {
         var range;
+        const Output = {
+            Hydra_Richeditor_editor_bold: false,
+            Hydra_Richeditor_editor_italic: false,
+            Hydra_Richeditor_editor_underline: false,
+            Hydra_Richeditor_editor_strike: false,
+        } as StyledClass
         if (window.getSelection) {
           var selection = window.getSelection();
           if (selection && selection.rangeCount > 0) {
@@ -167,16 +188,23 @@ class RichEditor extends React.Component {
             var clonedSelection = range.cloneContents();
             var div = document.createElement('div');
             div.appendChild(clonedSelection);
-            // return div.firstChildo;
-            if (div.firstElementChild) return div.firstElementChild?.classList.contains(classname)
-            else return false;
+            if (div.firstElementChild) {
+                Object.keys(Output).forEach(
+                    (e) => {
+                        if (div.firstElementChild?.classList.contains(e as keyof StyledClass)) 
+                            Output[e as keyof StyledClass] = true
+                    }
+                )
+                return Output
+            }
+            else return Output;
           }
           else {
-            return false;
+            return Output;
           }
         }
         else {
-          return false;
+          return Output;
         }
     }
 
@@ -195,25 +223,42 @@ class RichEditor extends React.Component {
                     <IconButton
                         Icon={BoldIcon}
                         OnClick={() => {
-                            let isBold = this.IsStyled("Hydra_Richeditor_editor_bold")
-                            // console.log("Jest ",isBold)
-                            if (!isBold) 
-                                this.SetInTag("a", "Hydra_Richeditor_editor_bold")
+                            if (!this.state.SeletedTextInfo.Hydra_Richeditor_editor_bold) 
+                                this.SetInTag("Hydra_Richeditor_editor_bold")
                             else this.ClearTag()
                         }}
-                        Seleted={this.state.SeletedTextInfo.Bold}
+                        Seleted={this.state.SeletedTextInfo.Hydra_Richeditor_editor_bold}
                     />
                     <IconButton
                         Icon={italicIcon}
+                        OnClick={() => {
+                            if (!this.state.SeletedTextInfo.Hydra_Richeditor_editor_italic) 
+                                this.SetInTag("Hydra_Richeditor_editor_italic")
+                            else this.ClearTag()
+                        }}
+                        Seleted={this.state.SeletedTextInfo.Hydra_Richeditor_editor_italic}
                     />
                     <IconButton
                         Icon={UnderlineIcon}
+                        OnClick={() => {
+                            if (!this.state.SeletedTextInfo.Hydra_Richeditor_editor_underline) 
+                                this.SetInTag("Hydra_Richeditor_editor_underline")
+                            else this.ClearTag()
+                        }}
+                        Seleted={this.state.SeletedTextInfo.Hydra_Richeditor_editor_underline}
                     />
                     <IconButton
                         Icon={StrikeIcon}
+                        OnClick={() => {
+                            if (!this.state.SeletedTextInfo.Hydra_Richeditor_editor_strike) 
+                                this.SetInTag("Hydra_Richeditor_editor_strike")
+                            else this.ClearTag()
+                        }}
+                        Seleted={this.state.SeletedTextInfo.Hydra_Richeditor_editor_strike}
                     />
                     <IconButton
                         Icon={LinkIcon}
+                        // Seleted={this.state.SeletedTextInfo.Hydra_Richeditor_editor_bold}
                     />
                     <Select/>
                 </div>
