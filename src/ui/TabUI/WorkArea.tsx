@@ -50,10 +50,13 @@ class TabSystem extends React.Component {
     }
 
     tabItem = (name: string, active: boolean, Index: string) => (
-        <div onClick={() => this.SetActiveTab(Index)} className={"Hydra_Tabs_tabs_item " + (active ? "Hydra_Tabs_tabs_item_active" : "Hydra_Tabs_tabs_item_inactive")}>
-            <a>{name}</a>
+        <div  className={"Hydra_Tabs_tabs_item " + (active ? "Hydra_Tabs_tabs_item_active" : "Hydra_Tabs_tabs_item_inactive")}>
+            <a onClick={() => this.SetActiveTab(Index)}>{name}</a>
             <div></div>
             <IconButton
+                style={{
+                    zIndex: 2
+                }}
                 Icon={CloseIcon}
                 OnClick={() => this.CloseTab(Index)}
             />
@@ -112,30 +115,15 @@ class TabSystem extends React.Component {
 
     public CloseTab(Index: string) {
         if (this.state.tabs[Index] === undefined) return
+        const keys = Object.keys(this.state.tabs)
         delete this.state.tabs[Index]
-        console.log("Zamykanie", Index)
         const length = Object.entries(this.state.tabs).length
         if (this.state.ActiveTab === Index && length > 0) {
-            const keys = Object.keys(this.state.tabs)
             if (keys[keys.indexOf(this.state.ActiveTab) + 1] !== undefined) {
                 this.SetActiveTab(keys[keys.indexOf(this.state.ActiveTab) + 1])
             } else if (keys[keys.indexOf(this.state.ActiveTab) - 1] !== undefined)  {
                 this.SetActiveTab(keys[keys.indexOf(this.state.ActiveTab) - 1])
             }
-        } else if (length !== 0) {
-            const keys = Object.keys(this.state.tabs)
-            this.state.ActiveTab = keys[0]
-            this.ForceSetActiveTab(keys[1])
-            console.log("otw", keys[1])
-            this.forceUpdate()
-            // console.log(this.state.tabs[this.state.ActiveTab] )
-            // if (this.state.tabs[actual] === undefined) {
-                
-            // } else this.ForceSetActiveTab(actual)
-            // console.log(Index, this.state)
-            // this.ForceSetActiveTab(this.state.ActiveTab)
-            // console.log(Index, this.state, this.state.tabs[this.state.ActiveTab], this.state.ActiveTab === Index)
-            // console.log(Object.entries(this.state.tabs).length > 0 , this.state.tabs[this.state.ActiveTab] !== undefined , this.state.tabs[this.state.ActiveTab].El !== undefined)
         } else {
             this.forceUpdate()
         }
