@@ -71,6 +71,7 @@ class RichEditor extends React.Component {
             let placeholder = this.editorRef.current.querySelector(".Hydra_Richeditor_editor_placeholder")
             if (placeholder != null) {
                 placeholder.remove()
+                this.CaretInPargraph()
             }
         }
     }
@@ -139,24 +140,43 @@ class RichEditor extends React.Component {
         const selection = window.getSelection();
         if (selection) {
             const range = selection.getRangeAt(0);
-            const newElement = document.createElement("a");
-            if (classname) {
-                Object.keys(this.state.SeletedTextInfo).forEach(
-                    e => {
-                        if (this.state.SeletedTextInfo[e as keyof StyledClass]) 
-                            newElement.classList.add(e as keyof StyledClass)
-                    }
-                )
-                newElement.classList.add(classname)
-            }
-            newElement.appendChild(document.createTextNode(range.toString()));
+            const newElement = document.createElement("div");
+            // if (classname) {
+            //     Object.keys(this.state.SeletedTextInfo).forEach(
+            //         e => {
+            //             if (this.state.SeletedTextInfo[e as keyof StyledClass]) 
+            //                 newElement.classList.add(e as keyof StyledClass)
+            //         }
+            //     )
+            //     newElement.classList.add(classname)
+            // }
+            const cloned = range.cloneContents()
             range.deleteContents();
-            range.insertNode(newElement);
-            const newRange = document.createRange();
-            newRange.setStart(newElement as Node, 0);
-            newRange.setEnd(range.endContainer, range.endOffset);
+            cloned.childNodes.forEach(
+                e => {
+                    let d = e as HTMLAnchorElement
+                    if (e.nodeName.toLowerCase() == "div") {
+                        if (classname) d.classList.add(classname)
+                        range.insertNode(d);
+                    } else if (e.nodeName.toLocaleLowerCase() == "#text") {
+                        let el = document.createElement("strong")
+                        el.innerText = d.textContent!
+                        if (classname) el.classList.add(classname)
+                        range.insertNode(el); 
+                    }
+                    
+                }
+            )
             selection.removeAllRanges();
-            selection.addRange(newRange);
+
+            // newElement.appendChild(document.createTextNode(range.toString()));
+            
+            // range.insertNode(newElement);
+            // const newRange = document.createRange();
+            // newRange.setStart(newElement as Node, 0);
+            // newRange.setEnd(range.endContainer, range.endOffset);
+            // selection.removeAllRanges();
+            // selection.addRange(newRange);
         }
     }
 
@@ -205,6 +225,39 @@ class RichEditor extends React.Component {
         }
         else {
           return Output;
+        }
+    }
+
+    private CaretInPargraph() {
+        const selection = window.getSelection();
+        if (selection) {
+            const range = selection.getRangeAt(0);
+            const currentNode = range.startContainer;
+            const el = document.createElement("p")
+            var isInsideParagraph = currentNode.nodeName === 'P' || currentNode.parentNode!.nodeName === 'P';
+            if (isInsideParagraph) {
+                if (this.editorRef.current) this.editorRef.current.insertBefore(el, currentNode.parentNode!.nextSibling);
+            } else {
+                range.deleteContents();
+                range.insertNode(el);
+            }
+            selection.collapse(el, 0)
+        }  
+    }
+
+    OnKeDown(key: React.KeyboardEvent<HTMLDivElement>) {
+        if (key.key === 'Enter') {
+            key.preventDefault();
+            this.CaretInPargraph()
+        }
+    }
+
+    OnKeUP(key: React.KeyboardEvent<HTMLDivElement>) {
+        if (key.key == "Backspace") {
+            console.log("Clear", this.editorRef.current!.innerHTML.replaceAll(/<\/?br>|[\s]+/gi, ""))
+            if (this.editorRef.current!.innerHTML.replaceAll(/<\/?br>|[\s]+/gi, "") === "") {
+                this.CaretInPargraph()
+            }
         }
     }
 
@@ -281,8 +334,9 @@ class RichEditor extends React.Component {
                     onSelect={this.handleSelectionChange.bind(this)}
                     onInput={this.CommandStart.bind(this)}
                     dangerouslySetInnerHTML={{__html: this.state.Content}}
+                    onKeyDown={this.OnKeDown.bind(this)}
+                    onKeyUp={this.OnKeUP.bind(this)}
                 >
-
                 </div>
             </div>
         )
