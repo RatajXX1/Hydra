@@ -8,6 +8,7 @@ import {ReactComponent as StrikeIcon} from "../../Images/strike.svg";
 import {ReactComponent as LinkIcon} from "../../Images/link.svg";
 import { Select } from "../Inputs/Inputs";
 import ReactDOM from 'react-dom';
+import { EditSelection, GetSelected } from "../../Lib/Selection";
 
 type StyledClass = {
     Hydra_Richeditor_editor_bold : boolean,
@@ -40,8 +41,10 @@ class RichEditor extends React.Component {
     }
 
     handleSelectionChange = () => {
+        
         const selection = window.getSelection();
         if (selection && selection.toString() !== "") {
+            // GetSelected(this.editorRef)
           const range = selection.getRangeAt(0);
           const rects = range.getClientRects();
           const lastRect = rects[rects.length - 1];
@@ -56,7 +59,7 @@ class RichEditor extends React.Component {
             left: Math.min(Math.max(left, 0), maxWidth),
           };
         //   this.GetSelectedTextInfo()
-          this.state.SeletedTextInfo = this.IsStyled()
+        //   this.state.SeletedTextInfo = this.IsStyled()
           this.forceUpdate()
           this.textOptionsRef.current!.style.display = "flex";
           this.textOptionsRef.current!.style.top = `${position.top + 30}px`;
@@ -136,48 +139,37 @@ class RichEditor extends React.Component {
         return "";
     }
 
-    SetInTag(classname?: string ) {
-        const selection = window.getSelection();
-        if (selection) {
-            const range = selection.getRangeAt(0);
-            const newElement = document.createElement("div");
-            // if (classname) {
-            //     Object.keys(this.state.SeletedTextInfo).forEach(
-            //         e => {
-            //             if (this.state.SeletedTextInfo[e as keyof StyledClass]) 
-            //                 newElement.classList.add(e as keyof StyledClass)
-            //         }
-            //     )
-            //     newElement.classList.add(classname)
-            // }
-            const cloned = range.cloneContents()
-            range.deleteContents();
-            cloned.childNodes.forEach(
-                e => {
-                    let d = e as HTMLAnchorElement
-                    if (e.nodeName.toLowerCase() == "div") {
-                        if (classname) d.classList.add(classname)
-                        range.insertNode(d);
-                    } else if (e.nodeName.toLocaleLowerCase() == "#text") {
-                        let el = document.createElement("strong")
-                        el.innerText = d.textContent!
-                        if (classname) el.classList.add(classname)
-                        range.insertNode(el); 
-                    }
-                    
-                }
-            )
-            selection.removeAllRanges();
+    SetInTag(classname?: string ) { 
+        // const AddToChildNodes = (elments: NodeListOf<ChildNode>) => {
+        //     elments.forEach(
+        //         (e) => {
+        //             if (e.textContent == "") return
+        //             if (e.nodeName.toLowerCase() == "#text") {
+        //                 const el = document.createElement("span")
+        //                 el.textContent = e.textContent
+        //                 el.classList.add(classname!)
+        //                 e.parentNode!.replaceChild(el, e)
+        //             } else if (e.nodeName.toLowerCase() == "p") {
+        //                 if (e.childNodes.length > 0) {
+        //                     AddToChildNodes(e.childNodes)
+        //                 }
+        //             }
+        //         }
+        //     )
+        // }
 
-            // newElement.appendChild(document.createTextNode(range.toString()));
-            
-            // range.insertNode(newElement);
-            // const newRange = document.createRange();
-            // newRange.setStart(newElement as Node, 0);
-            // newRange.setEnd(range.endContainer, range.endOffset);
-            // selection.removeAllRanges();
-            // selection.addRange(newRange);
-        }
+        // const selection = window.getSelection();
+        // if (selection) {
+        //     const range = selection.getRangeAt(0);
+        //     // console.log(range.startContainer, range.endContainer, range.commonAncestorContainer)
+        //     const extracted = range.extractContents()
+        //     console.log(extracted)
+        //     AddToChildNodes(extracted.childNodes)
+        //     range.insertNode(extracted)
+        // }
+
+        const selected = GetSelected(this.editorRef)
+        if (selected.lines.length > 0) EditSelection(selected, "span", classname!)
     }
 
     ClearTag() {
@@ -192,55 +184,77 @@ class RichEditor extends React.Component {
         }
     }
 
-
     IsStyled(): StyledClass {
-        var range;
         const Output = {
             Hydra_Richeditor_editor_bold: false,
             Hydra_Richeditor_editor_italic: false,
             Hydra_Richeditor_editor_underline: false,
             Hydra_Richeditor_editor_strike: false,
         } as StyledClass
-        if (window.getSelection) {
-          var selection = window.getSelection();
-          if (selection && selection.rangeCount > 0) {
-            range = selection.getRangeAt(0);
-            var clonedSelection = range.cloneContents();
-            var div = document.createElement('div');
-            div.appendChild(clonedSelection);
-            if (div.firstElementChild) {
-                Object.keys(Output).forEach(
-                    (e) => {
-                        if (div.firstElementChild?.classList.contains(e as keyof StyledClass)) 
-                            Output[e as keyof StyledClass] = true
+
+        const CheckAllChilds = (elments: NodeListOf<ChildNode>, addIndex?: number) => {
+            if (addIndex === undefined) addIndex = 0
+            elments.forEach(
+                (e, index) => {
+                    if (e.textContent == "") return
+                    if (e.nodeName.toLowerCase() == "#text") {
+                        if (e.parentNode!.nodeName.toLowerCase() == "span" ) {
+                            Object.keys(Output).forEach(
+                                d => {
+                                    if ((e.parentNode as HTMLElement).classList.contains(d)) {
+                                        if (index + addIndex! == 0 && !Output[d as keyof StyledClass]) {
+                                            Output[d as keyof StyledClass] = true
+                                        }
+                                    } else Output[d as keyof StyledClass] = false
+                                }
+                            )
+                        } else Object.keys(Output).forEach(d => Output[d as keyof StyledClass] = false)
+                    } else if (e.nodeName.toLowerCase() == "p") {
+                        if (e.childNodes.length > 0) {
+                            CheckAllChilds(e.childNodes, index)
+                        }
+                    } else if (e.nodeName.toLowerCase() == "span") {
+                        Object.keys(Output).forEach(
+                            d => {
+                                if ((e as HTMLElement).classList.contains(d)) {
+                                    if (index + addIndex! == 0 && !Output[d as keyof StyledClass]) {
+                                        Output[d as keyof StyledClass] = true
+                                    }
+                                } else Output[d as keyof StyledClass] = false
+                            }
+                        )
                     }
-                )
-                return Output
+                }
+            )
+            
+        }
+
+        const selection = window.getSelection()
+        if (selection) {
+            if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const clonedSelection = range.cloneContents();
+                // console.log(clonedSelection)
+                CheckAllChilds(clonedSelection.childNodes)
             }
-            else return Output;
-          }
-          else {
-            return Output;
-          }
         }
-        else {
-          return Output;
-        }
+        return Output
     }
 
     private CaretInPargraph() {
         const selection = window.getSelection();
         if (selection) {
-            const range = selection.getRangeAt(0);
-            const currentNode = range.startContainer;
+            // const range = selection.getRangeAt(0);
+            // const currentNode = range.startContainer;
             const el = document.createElement("p")
-            var isInsideParagraph = currentNode.nodeName === 'P' || currentNode.parentNode!.nodeName === 'P';
-            if (isInsideParagraph) {
-                if (this.editorRef.current) this.editorRef.current.insertBefore(el, currentNode.parentNode!.nextSibling);
-            } else {
-                range.deleteContents();
-                range.insertNode(el);
-            }
+            // var isInsideParagraph = currentNode.nodeName === 'P' || currentNode.parentNode!.nodeName === 'P';
+            // if (isInsideParagraph) {
+            //     if (this.editorRef.current) this.editorRef.current.insertBefore(el, currentNode.parentNode!.nextSibling);
+            // } else {
+            //     range.deleteContents();
+            //     range.insertNode(el);
+            // }
+            this.editorRef.current?.append(el)
             selection.collapse(el, 0)
         }  
     }
@@ -254,7 +268,6 @@ class RichEditor extends React.Component {
 
     OnKeUP(key: React.KeyboardEvent<HTMLDivElement>) {
         if (key.key == "Backspace") {
-            console.log("Clear", this.editorRef.current!.innerHTML.replaceAll(/<\/?br>|[\s]+/gi, ""))
             if (this.editorRef.current!.innerHTML.replaceAll(/<\/?br>|[\s]+/gi, "") === "") {
                 this.CaretInPargraph()
             }
