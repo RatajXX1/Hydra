@@ -7,6 +7,12 @@ type SelectionState = {
     range: Range
 }
 
+type CaretPostion = {
+    Line: Node,
+    StartOffset: number,
+    EndOffset: number,
+}
+
 function GetParagraph(Item: Node) {
     let tempItem = Item
     while (tempItem.nodeName.toLowerCase() !== "p") {
@@ -16,14 +22,19 @@ function GetParagraph(Item: Node) {
     return tempItem
 }
 
-function CaretInParagraph() {
+function CaretInParagraph(): CaretPostion {
     const selection = window.getSelection()
     if (selection) {
         const range = selection.getRangeAt(0)       
         if (range.startContainer === range.endContainer) {
-            return GetParagraph(range.startContainer)
+            return {
+                Line: GetParagraph(range.startContainer),
+                StartOffset: range.startOffset,
+                EndOffset: range.endOffset,
+            } as CaretPostion
         }
     }
+    return {} as CaretPostion
 }
 
 function GetSelected(Reference: React.RefObject<any>): SelectionState {

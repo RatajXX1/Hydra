@@ -242,11 +242,15 @@ class RichEditor extends React.Component {
     }
 
     private CaretInPargraph() {  
-        const acutalline = CaretInParagraph()            
+        const {Line, EndOffset, StartOffset} = CaretInParagraph()            
         const p = document.createElement("p")
+        if (EndOffset !== 0) {
+            p.textContent = Line.textContent!.substring(StartOffset)
+            Line.textContent = Line.textContent!.substring(0, StartOffset)
+        }
         const selection = window.getSelection()
-        if (acutalline?.nextSibling !== null) {
-            if (this.editorRef.current) this.editorRef.current.insertBefore(p, acutalline?.nextSibling!);
+        if (Line?.nextSibling !== null) {
+            if (this.editorRef.current) this.editorRef.current.insertBefore(p, Line?.nextSibling!);
         } else this.editorRef.current!.append(p)
         if (selection) selection.collapse(p, 0)
     }
