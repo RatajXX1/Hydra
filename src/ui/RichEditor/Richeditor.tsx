@@ -73,7 +73,7 @@ class RichEditor extends React.Component {
         if (this.editorRef.current) {
             let placeholder = this.editorRef.current.querySelector(".Hydra_Richeditor_editor_placeholder")
             if (placeholder != null) {
-                placeholder.remove()
+                this.editorRef.current.innerHTML = ""
                 this.CaretInPargraph()
             }
         }

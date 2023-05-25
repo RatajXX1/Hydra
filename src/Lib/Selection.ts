@@ -79,12 +79,15 @@ function GetSelected(Reference: React.RefObject<any>): SelectionState {
 }
 
 function EditSelection(Selected: SelectionState, WrapTag: string, ClassName: string) {
-    // console.log(Selected.lines, Selected.lines[0] as HTMLElement)
+    console.log(Selected.startOffset, Selected.endOffset)
+    // 3 6
     Selected.lines
         .forEach(
             (e, index) => {
                 if ((e as HTMLElement).children.length === 0) {
-                    (e as HTMLElement).innerHTML = `${(index === 0 ? (e as HTMLElement).textContent!.substring(0, Selected.startOffset) : "")}<${WrapTag} class="${ClassName}">${(e as HTMLElement).textContent?.substring(index === 0 ? Selected.startOffset : 0, index === Selected.lines.length - 1 ? Selected.endOffset : undefined)}</${WrapTag}>`
+                    const text = (e as HTMLElement).textContent
+                    if (text === null) return
+                    (e as HTMLElement).innerHTML = `${(index === 0 ? text.substring(0, Selected.startOffset) : "")}<${WrapTag} class="${ClassName}">${text.substring(index === 0 ? Selected.startOffset : 0, index === Selected.lines.length - 1 ? Selected.endOffset : undefined)}</${WrapTag}>${(index === Selected.lines.length - 1 ? text.substring(Selected.endOffset) : "")}`
                 } 
                 else {
                     // const d = (e as HTMLElement)
