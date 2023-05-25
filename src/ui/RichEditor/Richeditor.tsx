@@ -8,7 +8,7 @@ import {ReactComponent as StrikeIcon} from "../../Images/strike.svg";
 import {ReactComponent as LinkIcon} from "../../Images/link.svg";
 import { Select } from "../Inputs/Inputs";
 import ReactDOM from 'react-dom';
-import { EditSelection, GetSelected } from "../../Lib/Selection";
+import { CaretInParagraph, EditSelection, GetSelected } from "../../Lib/Selection";
 
 type StyledClass = {
     Hydra_Richeditor_editor_bold : boolean,
@@ -241,22 +241,14 @@ class RichEditor extends React.Component {
         return Output
     }
 
-    private CaretInPargraph() {
-        const selection = window.getSelection();
-        if (selection) {
-            // const range = selection.getRangeAt(0);
-            // const currentNode = range.startContainer;
-            const el = document.createElement("p")
-            // var isInsideParagraph = currentNode.nodeName === 'P' || currentNode.parentNode!.nodeName === 'P';
-            // if (isInsideParagraph) {
-            //     if (this.editorRef.current) this.editorRef.current.insertBefore(el, currentNode.parentNode!.nextSibling);
-            // } else {
-            //     range.deleteContents();
-            //     range.insertNode(el);
-            // }
-            this.editorRef.current?.append(el)
-            selection.collapse(el, 0)
-        }  
+    private CaretInPargraph() {  
+        const acutalline = CaretInParagraph()            
+        const p = document.createElement("p")
+        const selection = window.getSelection()
+        if (acutalline?.nextSibling !== null) {
+            if (this.editorRef.current) this.editorRef.current.insertBefore(p, acutalline?.nextSibling!);
+        } else this.editorRef.current!.append(p)
+        if (selection) selection.collapse(p, 0)
     }
 
     OnKeDown(key: React.KeyboardEvent<HTMLDivElement>) {

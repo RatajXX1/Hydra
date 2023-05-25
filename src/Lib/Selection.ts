@@ -17,7 +17,13 @@ function GetParagraph(Item: Node) {
 }
 
 function CaretInParagraph() {
-
+    const selection = window.getSelection()
+    if (selection) {
+        const range = selection.getRangeAt(0)       
+        if (range.startContainer === range.endContainer) {
+            return GetParagraph(range.startContainer)
+        }
+    }
 }
 
 function GetSelected(Reference: React.RefObject<any>): SelectionState {
@@ -86,5 +92,6 @@ function GetSelectedStyle() {
 
 export {
     GetSelected,
-    EditSelection
+    EditSelection,
+    CaretInParagraph
 }
