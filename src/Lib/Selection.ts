@@ -90,6 +90,40 @@ function EditSelection(Selected: SelectionState, WrapTag: string, ClassName: str
                     (e as HTMLElement).innerHTML = `${(index === 0 ? text.substring(0, Selected.startOffset) : "")}<${WrapTag} class="${ClassName}">${text.substring(index === 0 ? Selected.startOffset : 0, index === Selected.lines.length - 1 ? Selected.endOffset : undefined)}</${WrapTag}>${(index === Selected.lines.length - 1 ? text.substring(Selected.endOffset) : "")}`
                 } 
                 else {
+                    // console.log((e as HTMLElement).childNodes)
+
+                    for(let i = 0; i < e.childNodes.length; i++) {
+                        if (e.childNodes[i].nodeName.toLowerCase() === "#text") {
+                            const elemnet = document.createElement(WrapTag)
+                            elemnet.classList.add(ClassName)
+                            if (index == 0 || index == Selected.lines.length - 1){
+                                elemnet.textContent = e.childNodes[i].textContent!.substring(index === 0 ? Selected.startOffset : 0, index === Selected.lines.length - 1 ? Selected.endOffset : undefined)
+                                const back = e.childNodes[i].textContent!
+                                console.log(Selected.startOffset, Selected.endOffset, back)
+                                if (e.childNodes[i +1] == undefined) e.insertBefore(elemnet, e.childNodes[i + 1])
+                                else e.appendChild(elemnet)
+                                if (index == 0 && Selected.startOffset > 0) {
+                                    e.childNodes[i].textContent = e.childNodes[i].textContent!.substring(Selected.startOffset)
+                                }
+                                if (index == Selected.lines.length - 1 && Selected.endOffset > 0) {
+                                    const text = document.createTextNode(back.substring(Selected.endOffset))
+                                    // e.insertBefore(text, e.childNodes[i + 1])
+                                    if (e.childNodes[i +1] == undefined) e.insertBefore(text, e.childNodes[i + 1])
+                                    else e.appendChild(text)
+                                }
+                            }
+                            else {
+                                elemnet.textContent = e.childNodes[i].textContent!
+                                e.replaceChild(elemnet, e.childNodes[i])
+                            }
+                        }
+                        else if (e.childNodes[i].nodeName.toLowerCase() === WrapTag) {
+                            if (!(e.childNodes[i] as HTMLElement).classList.contains(ClassName)) {
+                                (e.childNodes[i] as HTMLElement).classList.add(ClassName)
+                            }
+                        }
+                    }
+                    // <p>dsakd<spna>aksldak</span>sdl;aks</p>
                     // const d = (e as HTMLElement)
                     // for(let i = 0; i < d.children.length; i++) {
 

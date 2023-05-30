@@ -1,0 +1,57 @@
+.Hydra_BlockEdtior_main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.Hydra_BlockEdtior_workarea {
+    position: relative;
+    width: 70%;
+    left: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding-top: 100px;
+}
+
+.Hydra_BlockEdtior_workarea_block {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    width: 100%;
+    margin-bottom: 10px;
+    // padding: 5px;
+    transition: .2s;
+
+
+    &:hover {
+        .Hydra_BlockEdtior_workarea_blocks {
+            background-color: #F4F4F4;
+        }
+        .Hydra_BlockEdtior_workarea_block_options {
+            display: flex;
+        }
+    }
+
+    .Hydra_BlockEdtior_workarea_blocks {
+        position: relative;
+        width: 100%;
+        padding: 5px;
+        outline: none;
+    }
+
+    .Hydra_BlockEdtior_workarea_block_options {
+        position: relative;
+        display: none;
+        flex-direction: row;
+        justify-content: start;
+        width: 50px;
+        // left: -55px;
+        svg {
+            fill: black;
+            stroke: black;
+        }
+    }
+}
+
+

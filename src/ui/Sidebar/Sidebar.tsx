@@ -8,6 +8,7 @@ import {ReactComponent as ListIcon} from "../../Images/list.svg";
 import {ReactComponent as SettingsIcon} from "../../Images/settings.svg";
 import {ReactComponent as SearchIcon} from "../../Images/search.svg";
 import { RichEditor } from "../RichEditor/Richeditor";
+import BlockEditor from "../BlockEditor/BlockEditor";
 
 class SideBar extends React.Component {
 
@@ -25,7 +26,7 @@ class SideBar extends React.Component {
                                     this.count += 1
                                     window.addTab(
                                         "Notatka z SIDE",
-                                        <RichEditor/>
+                                        <BlockEditor/>
                                     )
                                 }
                             }}
