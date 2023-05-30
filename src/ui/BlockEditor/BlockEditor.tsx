@@ -48,11 +48,6 @@ class BlockEditor extends React.Component {
         this.state.DraggedItem = -1
         this.forceUpdate()
     }
-
-    private handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
-        // setDraggedItem(id);
-        // event.dataTransfer.setData('text/plain', event.currentTarget.id);
-    };
     
     private handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -98,7 +93,6 @@ class BlockEditor extends React.Component {
                                         tab.push(
                                             <div 
                                                 draggable={index === this.state.DraggedItem} 
-                                                onDragStart={this.handleDragStart.bind(this)}
                                                 onDragOver={this.handleDragOver.bind(this)}
                                                 onDragLeave={this.handleDragLeft.bind(this)}
                                                 onDragEnd={this.StopDrag.bind(this)}

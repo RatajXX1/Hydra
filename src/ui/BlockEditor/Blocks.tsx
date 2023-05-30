@@ -23,6 +23,12 @@ class Blocks extends React.Component<BlockProps> {
         }
     }
 
+    private onBlur() {
+        if (this.blockRef.current && this.blockRef.current.textContent.replaceAll(/[ \n\/]+/g, "").length === 0) {
+            this.blockRef.current.innerHTML = `<a class="Hydra_BlockEdtior_workarea_block_placeholder">Zacznij pisac ...</a>`
+        }
+    }
+
     private onInput() {
         if (this.blockRef.current && this.props.onUpdate) this.props.onUpdate(this.blockRef.current.textContent)
     }
@@ -49,6 +55,7 @@ class Blocks extends React.Component<BlockProps> {
                 onClick={this.OnStart.bind(this)}
                 onKeyDown={this.onKeyDown.bind(this)}
                 onInput={this.onInput.bind(this)}
+                onBlur={this.onBlur.bind(this)}
                 dangerouslySetInnerHTML={{__html: this.props.content && this.props.content.length > 0 ? this.props.content : `<a class="Hydra_BlockEdtior_workarea_block_placeholder">Zacznij pisac ...</a>`}}
             >
             </div>
