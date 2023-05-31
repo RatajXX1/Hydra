@@ -4,6 +4,7 @@ import Blocks, { BlockTypes } from "./Blocks";
 import {ReactComponent as DotsIcon} from "../../Images/move.svg";
 import {ReactComponent as AddIcon} from "../../Images/add.svg";
 import { IconButton } from "../Buttons/Buttons";
+import ScrollArea from "../ScrollArea/Scrollarea";
 
 type ContentTypes = {
     Type: BlockTypes,
@@ -24,15 +25,17 @@ class CommandPropmpt extends React.Component {
     render(): React.ReactNode {
         return (
             <div className="Hydra_BlockEdtior_commnad_work">
-                {
-                    (
-                        () => {
-                            const tab: React.ReactNode[] = []
-                            if (this.state.Command !== undefined && this.state.Command.length > 0)  for(let i = 0; i < 5; i++) tab.push(<a>{this.state.Command}</a>)
-                            return tab
-                        }
-                    )()
-                }
+                <ScrollArea>
+                    {
+                        (
+                            () => {
+                                const tab: React.ReactNode[] = []
+                                if (this.state.Command !== undefined && this.state.Command.length > 0)  for(let i = 0; i < 25; i++) tab.push(<a>{i.toString() + " " + this.state.Command}</a>)
+                                return tab
+                            }
+                        )()
+                    }                    
+                </ScrollArea>
             </div>
         )
     }
@@ -179,61 +182,64 @@ class BlockEditor extends React.Component {
     render(): React.ReactNode {
         return (
             <div className="Hydra_BlockEdtior_main">
-                <div 
-                    className="Hydra_BlockEdtior_workarea"
-                    onKeyDown={this.onKeyDown.bind(this)}
-                    onMouseUp={this.StopDrag.bind(this)}
-                    ref={this.WorkArea}
-                >
-                    <div ref={this.CommnadBox} className="Hydra_BlockEdtior_commnad_main">
-                        <CommandPropmpt ref={this.Commnads}/>
-                    </div>
+                <ScrollArea>
+                    <div 
+                        className="Hydra_BlockEdtior_workarea"
+                        onKeyDown={this.onKeyDown.bind(this)}
+                        onMouseUp={this.StopDrag.bind(this)}
+                        ref={this.WorkArea}
+                    >
+                        <div ref={this.CommnadBox} className="Hydra_BlockEdtior_commnad_main">
+                            <CommandPropmpt ref={this.Commnads}/>
+                        </div>
 
-                    {
-                        (
-                            () => {
-                                const tab: React.ReactNode[] = []
-                                
-                                this.state.Content.forEach(
-                                    (e, index) => {
-                                        tab.push(
-                                            <div 
-                                                draggable={index === this.state.DraggedItem} 
-                                                onDragOver={this.handleDragOver.bind(this)}
-                                                onDragLeave={this.handleDragLeft.bind(this)}
-                                                onDragEnd={this.StopDrag.bind(this)}
-                                                onDrop={this.handleDrop.bind(this)}
-                                                onInput={this.onInput.bind(this)}
-                                                onKeyUp={this.onKeyUp.bind(this)}
-                                                className="Hydra_BlockEdtior_workarea_block"
-                                                id={"Block_" + index.toString()}
-                                                key={index}
-                                            >
-                                                <div className="Hydra_BlockEdtior_workarea_block_options">
-                                                    <IconButton Icon={AddIcon} OnClick={this.AddNewBlockAndActive.bind(this)}/>
-                                                    <IconButton 
-                                                        Icon={DotsIcon} 
-                                                        onMouseDown={this.StartDrag.bind(this, index)}
+                        {
+                            (
+                                () => {
+                                    const tab: React.ReactNode[] = []
+                                    
+                                    this.state.Content.forEach(
+                                        (e, index) => {
+                                            tab.push(
+                                                <div 
+                                                    draggable={index === this.state.DraggedItem} 
+                                                    onDragOver={this.handleDragOver.bind(this)}
+                                                    onDragLeave={this.handleDragLeft.bind(this)}
+                                                    onDragEnd={this.StopDrag.bind(this)}
+                                                    onDrop={this.handleDrop.bind(this)}
+                                                    onInput={this.onInput.bind(this)}
+                                                    onKeyUp={this.onKeyUp.bind(this)}
+                                                    className="Hydra_BlockEdtior_workarea_block"
+                                                    id={"Block_" + index.toString()}
+                                                    key={index}
+                                                >
+                                                    <div className="Hydra_BlockEdtior_workarea_block_options">
+                                                        <IconButton Icon={AddIcon} OnClick={this.AddNewBlockAndActive.bind(this)}/>
+                                                        <IconButton 
+                                                            Icon={DotsIcon} 
+                                                            onMouseDown={this.StartDrag.bind(this, index)}
+                                                        />
+                                                    </div>
+                                                    <Blocks 
+                                                        type={e.Type}
+                                                        ref={e.Ref}
+                                                        content={e.Content}
+                                                        onUpdate={(text) => {
+                                                            this.state.Content[index].Content = text
+                                                        }}
                                                     />
                                                 </div>
-                                                <Blocks 
-                                                    type={e.Type}
-                                                    ref={e.Ref}
-                                                    content={e.Content}
-                                                    onUpdate={(text) => {
-                                                        this.state.Content[index].Content = text
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    }
-                                )
+                                            )
+                                        }
+                                    )
 
-                                return tab
-                            }
-                        )()
-                    }
-                </div>
+                                    return tab
+                                }
+                            )()
+                        }
+                    </div>                    
+                </ScrollArea>
+
             </div>
         )
     }

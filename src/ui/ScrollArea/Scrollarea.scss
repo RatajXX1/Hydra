@@ -1,0 +1,26 @@
+.Hydra_Scrollarea_main {
+    position: relative;
+    display: block;
+    // overflow: hidden;
+    width: 100%;
+    height: 100%;
+
+    .Hydra_Scrollarea_workarea {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .Hydra_Scrollarea_scroll {
+        z-index: 3;
+        position: absolute;
+        background-color: rgba(43, 43, 43, 0.087);
+        width: 7px;
+        right: 5px;
+        height: 25%;
+        border-radius: 15px;
+        cursor: pointer;
+    }
+
+}
