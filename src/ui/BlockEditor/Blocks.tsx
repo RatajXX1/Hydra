@@ -21,6 +21,7 @@ class Blocks extends React.Component<BlockProps> {
             this.OnStart()
             selection.collapse(this.blockRef.current)
         }
+        console.log("dsa")
     }
 
     private onBlur() {
