@@ -50,7 +50,14 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
         if (this.scrollArea.current) {
             const x = this.scrollArea.current.parentNode.querySelector(".Hydra_Scrollarea_scroll_y")
             if (x) {
-                x.style.top = `${(this.scrollArea.current.scrollTop / (this.scrollArea.current.scrollTopMax + this.state.ScrollYHeight * 4.5)) * 100}%`
+                const scrollHeight = this.scrollArea.current.scrollHeight;
+                const clientHeight = this.scrollArea.current.clientHeight;
+                const scrollTop = this.scrollArea.current.scrollTop;
+                const scrollbarHeight = x.clientHeight;
+                const maxScrollTop = scrollHeight - clientHeight;
+                const scrollPercentage = (scrollTop / maxScrollTop) * 100;
+                const scrollbarPosition = scrollPercentage * (clientHeight - scrollbarHeight) / 100;
+                x.style.top = `${scrollbarPosition}px`;
             }
         }
     }
@@ -77,7 +84,6 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
                 pos[0] !== undefined &&
                 !((document.body.clientHeight - this.scrollArea.current.clientHeight) < pos[0].y - OffsetScreen && this.scrollArea.current.clientHeight > pos[0].y + OffsetScreen)
             ) {
-                // console.log("Nie ma na ekranie", pos[0].y)
                 if ((document.body.clientHeight - this.scrollArea.current.clientHeight) > pos[0].y - OffsetScreen) this.scrollArea.current.scrollTop -= pos[0].y/2
                 else this.scrollArea.current.scrollTop += pos[0].y/2
                 this.UpdateScrollsPos()
@@ -95,7 +101,6 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
             const focusElement = range.commonAncestorContainer as HTMLElement;
             const elementRect = focusElement.getBoundingClientRect();
             const scrollAreaRect = this.scrollArea.current.getBoundingClientRect();
-            
             const topDifference = elementRect.top - scrollAreaRect.top;
             const bottomDifference = scrollAreaRect.bottom - elementRect.bottom;
             
@@ -104,8 +109,9 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
             } else if (bottomDifference - OffsetScreen < 0) {
               this.scrollArea.current.scrollTop += Math.abs(bottomDifference - OffsetScreen);
             }
+            this.UpdateScrollsPos()
           } catch (e) {
-            console.log('Error occurred while setting scroll position');
+            // console.log('Error occurred while setting scroll position');
           }
         }
     }
