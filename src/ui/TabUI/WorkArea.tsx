@@ -4,6 +4,7 @@ import {ReactComponent as CloseIcon} from "../../Images/close.svg";
 import { IconButton } from "../Buttons/Buttons";
 import { RichEditor } from "../RichEditor/Richeditor";
 import { Typography } from "../Text/Text";
+import ScrollArea from "../ScrollArea/Scrollarea";
 
 declare global {
     interface Window {
@@ -135,17 +136,21 @@ class TabSystem extends React.Component {
         return (
             <div className="Hydra_Tabs_main">
                 <div className="Hydra_Tabs_tabs">
-                    {
-                        (() => {
-                            const tab: JSX.Element[] = []
-                            Object.entries(this.state.tabs).forEach(
-                                (item) => {
-                                    tab.push(this.tabItem(item[1].Name, this.state.ActiveTab === item[0], item[0]))
-                                }
-                            )
-                            return tab
-                        })()
-                    }
+                    <ScrollArea BlockY>
+                        <div className="Hydra_Tabs_tabs_main">
+                            {
+                                (() => {
+                                    const tab: JSX.Element[] = []
+                                    Object.entries(this.state.tabs).forEach(
+                                        (item) => {
+                                            tab.push(this.tabItem(item[1].Name, this.state.ActiveTab === item[0], item[0]))
+                                        }
+                                    )
+                                    return tab
+                                })()
+                            }
+                        </div>                        
+                    </ScrollArea>
                 </div>
                 <div className="Hydra_Tabs_workarea">
                     {

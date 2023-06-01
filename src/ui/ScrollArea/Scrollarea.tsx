@@ -2,26 +2,17 @@ import React from "react";
 import "./Scrollarea.scss";
 
 type ScrollAreacProps = {
+    BlockY?: boolean,
+    BlockX?: boolean,
     children: React.ReactNode[] | React.ReactNode
 }
-
-// scrollHeight: 500
-// ​
-// scrollLeft: 0
-// ​
-// scrollLeftMax: 0
-// ​
-// scrollTop: 0
-// ​
-// scrollTopMax: 350
-// ​
-// scrollWidth: 200
 
 class ScrollArea extends React.Component<ScrollAreacProps> {
     scrollArea = React.createRef<any>()
 
     state = {
-        ScrollYHeight: 0
+        ScrollYHeight: 0,
+        ScrollXHeight: 0,
     }
 
     constructor(props: ScrollAreacProps) {
@@ -39,16 +30,22 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
     private ScrollsSize() {
         if (this.scrollArea.current) {
             const x = this.scrollArea.current.parentNode.querySelector(".Hydra_Scrollarea_scroll_y")
-            if (x) {
-                this.state.ScrollYHeight = (this.scrollArea.current.clientHeight / this.scrollArea.current.scrollHeight) * 100
-                x.style.height = `${this.state.ScrollYHeight}%`
-            }
+            const y = this.scrollArea.current.parentNode.querySelector(".Hydra_Scrollarea_scroll_x")
+            this.state.ScrollYHeight = (this.scrollArea.current.clientHeight / this.scrollArea.current.scrollHeight) * 100
+            if (x) x.style.height = `${this.state.ScrollYHeight}%`
+            this.state.ScrollXHeight = (this.scrollArea.current.clientWidth / this.scrollArea.current.scrollWidth) * 100
+            if (y) y.style.width = `${this.state.ScrollXHeight}%`
+            if (this.state.ScrollXHeight >= 95) y.style.opacity = "0"
+            else y.style.opacity = "1"
+            if (x) if (this.state.ScrollYHeight >= 95) x.style.opacity = "0"
+            else x.style.opacity = "1"
         }
     }
 
     private UpdateScrollsPos() {
         if (this.scrollArea.current) {
             const x = this.scrollArea.current.parentNode.querySelector(".Hydra_Scrollarea_scroll_y")
+            const y = this.scrollArea.current.parentNode.querySelector(".Hydra_Scrollarea_scroll_x")
             if (x) {
                 const scrollHeight = this.scrollArea.current.scrollHeight;
                 const clientHeight = this.scrollArea.current.clientHeight;
@@ -59,14 +56,31 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
                 const scrollbarPosition = scrollPercentage * (clientHeight - scrollbarHeight) / 100;
                 x.style.top = `${scrollbarPosition}px`;
             }
+
+            if (y) {
+                const horizontalScrollWidth = this.scrollArea.current.scrollWidth;
+                const horizontalClientWidth = this.scrollArea.current.clientWidth;
+                const horizontalScrollLeft = this.scrollArea.current.scrollLeft;
+        
+                const horizontalScrollbarWidth = y.clientWidth;
+                const horizontalMaxScrollLeft = horizontalScrollWidth - horizontalClientWidth;
+        
+                const horizontalScrollPercentage = (horizontalScrollLeft / horizontalMaxScrollLeft) * 100;
+                const horizontalScrollbarPosition = horizontalScrollPercentage * (horizontalClientWidth - horizontalScrollbarWidth) / 100;
+        
+                y.style.left = `${horizontalScrollbarPosition}px`;
+            }
         }
     }
 
     // deltaY
     private ScrollWheel(event: React.WheelEvent) {
-        // console.log(event.deltaY)
         if (this.scrollArea.current) {
-            this.scrollArea.current.scrollTop += event.deltaY
+            if (!this.props.BlockY) this.scrollArea.current.scrollTop += event.deltaY
+            if (!this.props.BlockX) {
+                if (this.props.BlockY) this.scrollArea.current.scrollLeft += event.deltaY
+                else this.scrollArea.current.scrollLeft += event.deltaX 
+            }
             this.UpdateScrollsPos()
         }
     }
@@ -124,7 +138,12 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
                 onFocus={this.onFocus.bind(this)}
                 className="Hydra_Scrollarea_main"
             >
-                <div className="Hydra_Scrollarea_scroll Hydra_Scrollarea_scroll_y"></div>
+                {
+                    ((this.props.BlockY === undefined || !this.props.BlockY)) && <div className="Hydra_Scrollarea_scroll Hydra_Scrollarea_scroll_y"></div>
+                }
+                {
+                    ((this.props.BlockX === undefined || !this.props.BlockX)) && <div className="Hydra_Scrollarea_scroll Hydra_Scrollarea_scroll_x"></div>
+                }
                 <div 
                     className="Hydra_Scrollarea_workarea"   
                     ref={this.scrollArea}>

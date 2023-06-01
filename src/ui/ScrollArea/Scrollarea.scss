@@ -20,11 +20,21 @@
         z-index: 3;
         position: absolute;
         background-color: rgba(43, 43, 43, 0.087);
-        width: 7px;
-        right: 5px;
-        height: 25%;
         border-radius: 15px;
         cursor: pointer;
+    }
+
+    .Hydra_Scrollarea_scroll_y {
+        right: 5px;
+        width: 7px;
+        height: 25%;
+    }
+
+    .Hydra_Scrollarea_scroll_x {
+        left: 0;
+        bottom: 2px;
+        width: 25%;
+        height: 5px;
     }
 
 }

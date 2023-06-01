@@ -25,7 +25,7 @@ class SideBar extends React.Component {
                                 if (window.addTab !== undefined) {
                                     this.count += 1
                                     window.addTab(
-                                        "Notatka z SIDE",
+                                        "Notatka z SIDE Notatka z SIDE Notatka z SIDE Notatka z SIDE",
                                         <BlockEditor/>
                                     )
                                 }

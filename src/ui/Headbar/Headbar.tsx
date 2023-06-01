@@ -9,7 +9,7 @@ class HeadBar extends React.Component {
         return (
             <div className="Hydra_Headbar_main">
                 <div className="Hydra_Headbar_functions">
-                    <IconButton
+                    {/* <IconButton
                         Icon={ArrowImage}
                     />
                     <IconButton
@@ -18,7 +18,7 @@ class HeadBar extends React.Component {
                             fill: "red"
                         }}
                         Icon={ArrowImage}
-                    />
+                    /> */}
                 </div>
             </div>
         )
