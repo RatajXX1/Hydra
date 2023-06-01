@@ -63,16 +63,50 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
             this.UpdateScrollsPos()
         }
     }
-
+ 
+    // H: 877 ScrollH: 1960 scrollTopMax: 1083: scrollTOp: actual 
     private onInput() {
+        const OffsetScreen = 20
         const seletion = window.getSelection()
-        if (seletion) {
+        if (seletion && this.scrollArea.current) {
             const range = seletion.getRangeAt(0)
-            if (this.scrollArea.current) {
-                // console.log((range.commonAncestorContainer as HTMLElement).parentElement?.getBoundingClientRect())
-                this.scrollArea.current.scrollTop = (range.commonAncestorContainer as HTMLElement).parentElement?.getBoundingClientRect().y
+            const pos = range.getClientRects()
+            console.log(pos)
+            // if (pos[0]) console.log(pos[0], this.scrollArea.current.scrollTop, this.scrollArea.current.clientHeight + this.scrollArea.current.scrollTop)
+            if (
+                pos[0] !== undefined &&
+                !((document.body.clientHeight - this.scrollArea.current.clientHeight) < pos[0].y - OffsetScreen && this.scrollArea.current.clientHeight > pos[0].y + OffsetScreen)
+            ) {
+                // console.log("Nie ma na ekranie", pos[0].y)
+                if ((document.body.clientHeight - this.scrollArea.current.clientHeight) > pos[0].y - OffsetScreen) this.scrollArea.current.scrollTop -= pos[0].y/2
+                else this.scrollArea.current.scrollTop += pos[0].y/2
                 this.UpdateScrollsPos()
             }
+        }
+    }
+
+    public onFocus() {
+        const OffsetScreen = 20;
+        const selection = window.getSelection();
+        
+        if (selection && this.scrollArea.current) {
+          const range = selection.getRangeAt(0);
+          try {
+            const focusElement = range.commonAncestorContainer as HTMLElement;
+            const elementRect = focusElement.getBoundingClientRect();
+            const scrollAreaRect = this.scrollArea.current.getBoundingClientRect();
+            
+            const topDifference = elementRect.top - scrollAreaRect.top;
+            const bottomDifference = scrollAreaRect.bottom - elementRect.bottom;
+            
+            if (topDifference - OffsetScreen < 0) {
+              this.scrollArea.current.scrollTop -= Math.abs(topDifference - OffsetScreen);
+            } else if (bottomDifference - OffsetScreen < 0) {
+              this.scrollArea.current.scrollTop += Math.abs(bottomDifference - OffsetScreen);
+            }
+          } catch (e) {
+            console.log('Error occurred while setting scroll position');
+          }
         }
     }
 
@@ -80,7 +114,8 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
         return (
             <div 
                 onWheel={this.ScrollWheel.bind(this)}
-                onInput={this.onInput.bind(this)}
+                onSelect={this.onInput.bind(this)}
+                onFocus={this.onFocus.bind(this)}
                 className="Hydra_Scrollarea_main"
             >
                 <div className="Hydra_Scrollarea_scroll Hydra_Scrollarea_scroll_y"></div>
