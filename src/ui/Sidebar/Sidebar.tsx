@@ -10,6 +10,8 @@ import {ReactComponent as SearchIcon} from "../../Images/search.svg";
 import { RichEditor } from "../RichEditor/Richeditor";
 import BlockEditor from "../BlockEditor/BlockEditor";
 import FilesSideBar from "../FilesSideBar/FilesSideBar";
+import SettingsView from "../Settings/Settings";
+import CalendarView from "../CalendarView/CalendarView";
 
 class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
@@ -38,7 +40,9 @@ class SideBar extends React.Component {
         }
         if (this.state.ActiveItem.type != Item.type) {
             this.setState({...this.state, ActiveItem: Item})
-        } else this.setState({...this.state, ActiveItem: null})
+        } else {
+            this.setState({...this.state, ActiveItem: null})
+        }
     }
 
     onMouseDown(event: React.MouseEvent) {
@@ -84,7 +88,9 @@ class SideBar extends React.Component {
                         <IconButton
                             Icon={CalendarIcon}
                             OnClick={() => {
-
+                                if (window.addIfTab !== undefined) {
+                                    window.addIfTab("Kalendarz", <CalendarView/>)
+                                }
                             }}
                         />
                         <IconButton
@@ -100,6 +106,11 @@ class SideBar extends React.Component {
                         />
                         <IconButton
                             Icon={SettingsIcon}
+                            OnClick={() => {
+                                if (window.addIfTab !== undefined) {
+                                    window.addIfTab("Ustawienia", <SettingsView/>)
+                                }
+                            }}
                         />
                     </div> 
                 </div>
@@ -111,10 +122,13 @@ class SideBar extends React.Component {
                     }
                     </div>
                 }
-                <div 
-                    onMouseDown={this.onMouseDown.bind(this)}
-                    className="Hydra_Sidebar_main_resize"
-                ></div>
+                {
+                    this.state.ActiveItem != null && <div 
+                        onMouseDown={this.onMouseDown.bind(this)}
+                        className="Hydra_Sidebar_main_resize"
+                    ></div>
+                }
+
             </div>
         )
     }

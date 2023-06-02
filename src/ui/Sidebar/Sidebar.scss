@@ -1,6 +1,6 @@
 .Hydra_Sidebar_main {
     position: relative;
-    width: 196px;
+    width: fit-content;
     background-color: rgba(227, 227, 227, 0.22);
     height: 100%;
     display: flex;
@@ -23,6 +23,7 @@
     
     .Hydra_Sidebar_workarea {
         position: relative;
+        // min-width: calc(196px - 58px);
         width: 100%;
         height: 100%;
         // flex-shrink: 0;
