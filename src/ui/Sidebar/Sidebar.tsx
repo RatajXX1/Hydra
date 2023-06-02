@@ -9,6 +9,7 @@ import {ReactComponent as SettingsIcon} from "../../Images/settings.svg";
 import {ReactComponent as SearchIcon} from "../../Images/search.svg";
 import { RichEditor } from "../RichEditor/Richeditor";
 import BlockEditor from "../BlockEditor/BlockEditor";
+import FilesSideBar from "../FilesSideBar/FilesSideBar";
 
 class SideBar extends React.Component {
 
@@ -60,7 +61,7 @@ class SideBar extends React.Component {
                     </div> 
                 </div>
                 <div className="Hydra_Sidebar_workarea">
-
+                    <FilesSideBar/>
                 </div>
             </div>
         )

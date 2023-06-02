@@ -1,0 +1,112 @@
+.Hydra_filesbar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 0.5px solid rgba(12, 12, 12, 0.16);
+
+    .Hydra_filesbar_header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 90%;
+        height: 25px;
+        margin-top: 15px;
+        
+        b {
+            color: rgba(61, 61, 61, 0.71);
+            font-size: 16px;
+            line-height: 25px;
+        }
+        
+        .Hydra_filesbar_header_functions {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            vertical-align: middle;
+            justify-content: space-around;
+            height: 100%;
+        }
+
+    }
+
+    .Hydra_filesbar_workarea {
+        position: relative;
+        display: block;
+        width: 90%;
+        height: 100%;
+
+        ul {
+            position: relative;
+            list-style: none;
+            padding: 0;
+
+            li {
+                position: relative;
+                color: #4D4D4D;
+
+                & > span {
+                    position: relative;
+                    display: block;
+                    height: 100%;
+                    user-select: none;
+                    transition: .1s;
+                    padding: 5px;
+                    border-radius: 5px;
+                    cursor: pointer;
+
+                    &::before {
+                        display: block;
+                        position: absolute;
+                        content: "";
+                        background-color: #72727245;
+                        width: 1px;
+                        height: 98%;
+                        left: -6px;
+                        top: 50%;
+                        transform: translate(0, -50%);
+                    }
+
+                    &:hover {
+                        background-color: rgba(217, 217, 217, 0.39);
+                    }
+
+                }
+
+                & > div {
+                    display: flex;
+                    position: relative;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    user-select: none;
+                    cursor: pointer;
+
+                    svg {
+                        fill: rgba(58, 58, 58, 0.79);
+                        width: 10px;
+                        height: 10px;
+                        margin-right: 5px;
+                    }
+                }
+
+                & > ul {
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .Hydra_filesbar_main_list > li > span {
+            margin-left: 0;
+            &::before {
+                content: none;
+                left: 0;
+            }
+        }
+    }
+
+}
