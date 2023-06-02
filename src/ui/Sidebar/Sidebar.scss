@@ -1,9 +1,25 @@
 .Hydra_Sidebar_main {
     position: relative;
     width: 196px;
+    background-color: rgba(227, 227, 227, 0.22);
     height: 100%;
     display: flex;
     flex-direction: row;
+    resize: horizontal;
+
+    .Hydra_Sidebar_main_resize {
+        position: absolute;
+        opacity: 0;
+        right: -2px;
+        background-color: #1EBBFF;
+        width: 4px;
+        height: 100%;
+        cursor: col-resize;
+        transition: .3s;
+        &:hover {
+            opacity: 1;
+        }
+    }
     
     .Hydra_Sidebar_workarea {
         position: relative;

@@ -12,36 +12,79 @@ import BlockEditor from "../BlockEditor/BlockEditor";
 import FilesSideBar from "../FilesSideBar/FilesSideBar";
 
 class SideBar extends React.Component {
+    Sidebar = React.createRef<any>()
 
-    // count = 1
+    state = {
+        ActiveItem: <FilesSideBar/>,
+        resize: false,
+        StartPos: 0,
+        StartWidth: 0,
+    }
+
+    componentDidMount(): void {
+        document.addEventListener("mousemove", this.onMouseMove.bind(this))
+        document.addEventListener("mouseup", this.onMouseUP.bind(this))
+    }
+
+    componentWillUnmount(): void {
+        document.removeEventListener("mousemove", this.onMouseMove.bind(this))
+        document.removeEventListener("mouseup", this.onMouseUP.bind(this))
+    }
+
+    public SetActiveItem(Item: JSX.Element) {
+        if (this.state.ActiveItem == null) {
+            this.setState({...this.state, ActiveItem: Item})
+            return
+        }
+        if (this.state.ActiveItem.type != Item.type) {
+            this.setState({...this.state, ActiveItem: Item})
+        } else this.setState({...this.state, ActiveItem: null})
+    }
+
+    onMouseDown(event: React.MouseEvent) {
+        if (event.button === 0)
+        if (!this.state.resize && this.Sidebar.current) {
+            this.state.resize = true
+            this.state.StartPos = event.clientX
+            this.state.StartWidth = this.Sidebar.current.clientWidth
+        }
+    }
+
+    onMouseUP = (event: MouseEvent) => {
+        if (event.button === 0)
+        if (this.state.resize) {
+            this.state.resize = false
+            this.state.StartPos = 0
+        }
+    }
+
+    onMouseMove = (event: MouseEvent) => {
+        if (this.state.resize && this.Sidebar.current) {
+            const pos = this.state.StartWidth + (event.clientX - this.state.StartPos)
+            if (pos <= 196) {
+                this.state.resize = false
+                this.state.StartPos = 0
+                return
+            }
+            this.Sidebar.current.style.width = `${pos}px`
+        }
+    }
 
     render(): React.ReactNode {
         return (
-            <div className="Hydra_Sidebar_main">
+            <div ref={this.Sidebar} className="Hydra_Sidebar_main">
                 <div className="Hydra_Sidebar_functions">
                     <div>
                         <IconButton
                             Icon={FilesIcon}
                             OnClick={() => {
-                                if (window.addTab !== undefined) {
-                                    // this.count += 1
-                                    window.addTab(
-                                        "Notatka z SIDE Notatka z SIDE Notatka z SIDE Notatka z SIDE",
-                                        <BlockEditor/>
-                                    )
-                                }
+                                this.SetActiveItem(<FilesSideBar/>)
                             }}
                         />
                         <IconButton
                             Icon={CalendarIcon}
                             OnClick={() => {
-                                if (window.addTab !== undefined) {
-                                    // this.count += 1
-                                    window.addIfTab(
-                                        "Notatka z SIDE",
-                                        <BlockEditor/>
-                                    )
-                                }
+
                             }}
                         />
                         <IconButton
@@ -60,9 +103,18 @@ class SideBar extends React.Component {
                         />
                     </div> 
                 </div>
-                <div className="Hydra_Sidebar_workarea">
-                    <FilesSideBar/>
-                </div>
+                {
+                    this.state.ActiveItem != null && 
+                    <div className="Hydra_Sidebar_workarea">
+                    {
+                        this.state.ActiveItem
+                    }
+                    </div>
+                }
+                <div 
+                    onMouseDown={this.onMouseDown.bind(this)}
+                    className="Hydra_Sidebar_main_resize"
+                ></div>
             </div>
         )
     }
