@@ -13,7 +13,7 @@ import FilesSideBar from "../FilesSideBar/FilesSideBar";
 
 class SideBar extends React.Component {
 
-    count = 1
+    // count = 1
 
     render(): React.ReactNode {
         return (
@@ -24,7 +24,7 @@ class SideBar extends React.Component {
                             Icon={FilesIcon}
                             OnClick={() => {
                                 if (window.addTab !== undefined) {
-                                    this.count += 1
+                                    // this.count += 1
                                     window.addTab(
                                         "Notatka z SIDE Notatka z SIDE Notatka z SIDE Notatka z SIDE",
                                         <BlockEditor/>
@@ -36,10 +36,10 @@ class SideBar extends React.Component {
                             Icon={CalendarIcon}
                             OnClick={() => {
                                 if (window.addTab !== undefined) {
-                                    this.count += 1
-                                    window.addTab(
+                                    // this.count += 1
+                                    window.addIfTab(
                                         "Notatka z SIDE",
-                                        <RichEditor/>
+                                        <BlockEditor/>
                                     )
                                 }
                             }}

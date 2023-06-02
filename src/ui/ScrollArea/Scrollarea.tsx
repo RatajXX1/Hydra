@@ -42,6 +42,17 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
         }
     }
 
+    public ScrollTo(element: string) {
+        if (this.scrollArea.current) {
+            const el = this.scrollArea.current.querySelector(`#${element}`)
+            if (el) this.scrollArea.current.scrollTo({
+                top: el.offsetTop,
+                left: el.offsetLeft,
+                behavior: 'smooth',
+            })
+        }
+    }
+
     private UpdateScrollsPos() {
         if (this.scrollArea.current) {
             const x = this.scrollArea.current.parentNode.querySelector(".Hydra_Scrollarea_scroll_y")
@@ -92,7 +103,6 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
         if (seletion && this.scrollArea.current) {
             const range = seletion.getRangeAt(0)
             const pos = range.getClientRects()
-            console.log(pos)
             // if (pos[0]) console.log(pos[0], this.scrollArea.current.scrollTop, this.scrollArea.current.clientHeight + this.scrollArea.current.scrollTop)
             if (
                 pos[0] !== undefined &&

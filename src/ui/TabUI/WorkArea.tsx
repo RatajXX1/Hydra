@@ -9,6 +9,7 @@ import ScrollArea from "../ScrollArea/Scrollarea";
 declare global {
     interface Window {
         addTab: (Name: string, Element: JSX.Element) => void;
+        addIfTab: (Name: string, Element: JSX.Element) => void;
     }
 }
 
@@ -24,6 +25,7 @@ type TabList = {
 }
 
 class TabSystem extends React.Component {
+    ScrollTab = React.createRef<any>()
     state = {
         tabs: {} as TabList,
         ActiveTab: "" as string,
@@ -44,14 +46,24 @@ class TabSystem extends React.Component {
                         key={id}
                     />
                 )
-                this.state.tabs[id] = tab as Tab    
+                this.state.tabs[id] = tab as Tab   
                 this.ForceSetActiveTab(id)
+            }
+            window.addIfTab = (Name: string, Element: JSX.Element) => {
+                let i = ""
+                Object.entries(this.state.tabs).forEach(
+                    (item) => {
+                        if (item[1].El.type == Element.type) i = item[0]
+                    }
+                )
+                if (i !== "") this.ForceSetActiveTab(i)
+                else window.addTab(Name, Element)
             }
         }
     }
 
     tabItem = (name: string, active: boolean, Index: string) => (
-        <div  className={"Hydra_Tabs_tabs_item " + (active ? "Hydra_Tabs_tabs_item_active" : "Hydra_Tabs_tabs_item_inactive")}>
+        <div key={Index} id={Index} className={"Hydra_Tabs_tabs_item " + (active ? "Hydra_Tabs_tabs_item_active" : "Hydra_Tabs_tabs_item_inactive")}>
             <a onClick={() => this.SetActiveTab(Index)}>{name}</a>
             <div></div>
             <IconButton
@@ -99,17 +111,19 @@ class TabSystem extends React.Component {
                 {...this.state, ActiveTab: Index}, 
                 () => {
                     this.LoadState(Index)
+                    if (this.ScrollTab.current) this.ScrollTab.current.ScrollTo(Index)
                 }
             )
         }
     }
-
+    
     ForceSetActiveTab(Index: string) {
         this.SaveState(this.state.ActiveTab)
         this.setState(
             {...this.state, ActiveTab: Index}, 
             () => {
                 this.LoadState(Index)
+                if (this.ScrollTab.current) this.ScrollTab.current.ScrollTo(Index)
             }
         )
     }
@@ -136,7 +150,7 @@ class TabSystem extends React.Component {
         return (
             <div className="Hydra_Tabs_main">
                 <div className="Hydra_Tabs_tabs">
-                    <ScrollArea BlockY>
+                    <ScrollArea ref={this.ScrollTab} BlockY>
                         <div className="Hydra_Tabs_tabs_main">
                             {
                                 (() => {
