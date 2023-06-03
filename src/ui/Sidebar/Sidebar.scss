@@ -56,3 +56,42 @@
     }
 
 }
+
+.Hydra_Sidebar_search_results {
+    position: relative;
+    width: 98%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 200px;
+    border-top: 1px solid rgba(211, 211, 211, 1);
+    .Hydra_Sidebar_search_results_view {
+        position: relative;
+        width: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        
+        .Hydra_Sidebar_search_results_view_item {
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+            align-items: center;
+            gap: 10px;
+            height: 35px;
+            user-select: none;
+            cursor: pointer;
+            a {
+                font-size: 18px;
+                color: #4D4D4D;
+            }
+            svg {
+                fill: rgba(30, 30, 30, 0.44);
+                margin-left: 10px;
+            }
+            &:hover {
+                background-color: rgba(94, 94, 94, 0.305) !important;
+            }
+        }
+
+    }
+
+}

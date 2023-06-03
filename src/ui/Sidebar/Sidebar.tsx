@@ -14,6 +14,8 @@ import SettingsView from "../Settings/Settings";
 import CalendarView from "../CalendarView/CalendarView";
 import ProjectView from "../Project/ProjectView";
 import Modal from "../Modal/Modal";
+import { InputText } from "../Inputs/Inputs";
+import ScrollArea from "../ScrollArea/Scrollarea";
 
 class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
@@ -23,7 +25,8 @@ class SideBar extends React.Component {
         resize: false,
         StartPos: 0,
         StartWidth: 0,
-        SearchOpen: false
+        SearchOpen: false,
+        Query: ""
     }
 
     componentDidMount(): void {
@@ -145,10 +148,45 @@ class SideBar extends React.Component {
                     isOpen={this.state.SearchOpen}
                     OnClose={() => {
                         this.state.SearchOpen = false
+                        this.state.Query = ""
                         this.forceUpdate()
                     }}
                 >
-                    <a>szukaj</a>
+                    <InputText
+                        type="text"
+                        placeholder="Szukaj"
+                        Icon={SearchIcon}
+                        OnChangeValue={
+                            (e: React.ChangeEvent<HTMLInputElement>) => {
+                                this.state.Query = e.target.value
+                                this.forceUpdate()
+                            }
+                        }
+                    />
+                    {
+                        this.state.Query.length > 0 &&
+                        <div className="Hydra_Sidebar_search_results">
+                            <ScrollArea>
+                                <div className="Hydra_Sidebar_search_results_view">
+                                    {
+                                        (
+                                            () => {
+                                                const tab: React.ReactNode[] = []
+                                                for(let i = 1; i <= 15; i++)
+                                                    tab.push(
+                                                        <div style={{backgroundColor: i%2 == 0 ? "#F5F5F5" : ""}} className="Hydra_Sidebar_search_results_view_item">
+                                                            <FilesIcon/>
+                                                            <a>Notatka #{i.toString()}</a>
+                                                        </div>
+                                                    )
+                                                return tab
+                                            }
+                                        )()
+                                    }
+                                </div>
+                            </ScrollArea>
+                        </div>
+                    }
                 </Modal>
             </div>
         )

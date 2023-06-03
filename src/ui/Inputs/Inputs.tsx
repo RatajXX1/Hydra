@@ -1,7 +1,7 @@
 import { Typography } from "../Text/Text"
 import "./Inputs.scss";
 import {ReactComponent as DownArrowIcon} from "../../Images/emptyarrow.svg";
-
+import { FunctionComponent } from "react";
 
 function Select() {
     return (
@@ -12,6 +12,30 @@ function Select() {
     )
 }
 
+type TextProps = {
+    type: string,
+    placeholder?: string,
+    className?: string,
+    Icon?: FunctionComponent,
+    OnChangeValue?: (arg: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+function InputText(props: TextProps) {
+    return (
+        <div className={"Hydra_Inputs_Text " + (props.className != undefined ? props.className : "")}>
+            {
+                props.Icon != undefined && <props.Icon/>
+            }
+            <input
+                type={props.type}
+                placeholder={props.placeholder}
+                onChange={props.OnChangeValue}
+            />
+        </div>
+    )
+}
+
 export {
-    Select
+    Select,
+    InputText
 }

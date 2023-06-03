@@ -27,13 +27,16 @@ class Modal extends React.Component<ModalProps> {
                 className="Hydra_Modal_background"
                 onClick={this.OnClickBack.bind(this)}
             >
-                <ScrollArea>
-                    <div ref={this.moddalarea} className="Hydra_Modal_area">
-                        {
-                            this.props.children
-                        }
-                    </div>                    
-                </ScrollArea>                    
+                {
+                    this.props.isOpen && <ScrollArea>
+                        <div ref={this.moddalarea} className="Hydra_Modal_area">
+                            {
+                                this.props.children
+                            }
+                        </div>                    
+                    </ScrollArea> 
+                }
+                                   
             </div>
         )
     }
