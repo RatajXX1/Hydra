@@ -12,6 +12,7 @@ import BlockEditor from "../BlockEditor/BlockEditor";
 import FilesSideBar from "../FilesSideBar/FilesSideBar";
 import SettingsView from "../Settings/Settings";
 import CalendarView from "../CalendarView/CalendarView";
+import ProjectView from "../Project/ProjectView";
 
 class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
@@ -42,6 +43,7 @@ class SideBar extends React.Component {
             this.setState({...this.state, ActiveItem: Item})
         } else {
             this.setState({...this.state, ActiveItem: null})
+            if (this.Sidebar.current) this.Sidebar.current.style.width = ""
         }
     }
 
@@ -95,6 +97,11 @@ class SideBar extends React.Component {
                         />
                         <IconButton
                             Icon={ProjectsIcon}
+                            OnClick={() => {
+                                if (window.addIfTab !== undefined) {
+                                    window.addIfTab("Projekty", <ProjectView/>)
+                                }
+                            }}
                         />
                         <IconButton
                             Icon={ListIcon}
