@@ -13,6 +13,7 @@ import FilesSideBar from "../FilesSideBar/FilesSideBar";
 import SettingsView from "../Settings/Settings";
 import CalendarView from "../CalendarView/CalendarView";
 import ProjectView from "../Project/ProjectView";
+import Modal from "../Modal/Modal";
 
 class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
@@ -22,6 +23,7 @@ class SideBar extends React.Component {
         resize: false,
         StartPos: 0,
         StartWidth: 0,
+        SearchOpen: false
     }
 
     componentDidMount(): void {
@@ -110,6 +112,10 @@ class SideBar extends React.Component {
                     <div>
                         <IconButton
                             Icon={SearchIcon}
+                            OnClick={() => {
+                                this.state.SearchOpen = true
+                                this.forceUpdate()
+                            }}
                         />
                         <IconButton
                             Icon={SettingsIcon}
@@ -135,7 +141,15 @@ class SideBar extends React.Component {
                         className="Hydra_Sidebar_main_resize"
                     ></div>
                 }
-
+                <Modal
+                    isOpen={this.state.SearchOpen}
+                    OnClose={() => {
+                        this.state.SearchOpen = false
+                        this.forceUpdate()
+                    }}
+                >
+                    <a>szukaj</a>
+                </Modal>
             </div>
         )
     }
