@@ -30,7 +30,7 @@ class ProjectView extends React.Component {
                                             tab.push(
                                                 <div className="Hydra_ProjectView_column">
                                                     <a>
-                                                        Stage 1dlskadasdals;kdaslkdl;askdl;askdl;a
+                                                        Stage {i + 1}
                                                         <IconButton
                                                             Icon={AddIcon}
                                                         />

@@ -10,6 +10,14 @@ interface FileStructure {
     [key: string]: string | FileStructure;
 }
 
+declare global {
+    interface Window {
+        files: {
+            pathWalk: (arg: string) => Promise<void>
+        }
+    }
+}
+
 class FilesSideBar extends React.Component {
 
     state = {
@@ -23,6 +31,16 @@ class FilesSideBar extends React.Component {
             } as FileStructure,
             "Plik1" : "dsa"
         } as FileStructure
+    }
+
+    componentDidMount(): void {
+        const resp = window.files.pathWalk("/Users/michalratajewski/hydra/src/").then(
+            e => {
+                console.log("front", e)
+            }
+        )
+        
+
     }
 
     private PrintFilesList(fileStructure: FileStructure) {
