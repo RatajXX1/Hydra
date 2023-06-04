@@ -12,6 +12,11 @@
     padding-left: 10px;
     box-sizing: border-box;
 
+    -webkit-app-region: drag !important;
+    & > * {
+      -webkit-app-region: drag !important;
+    }
+
     .Hydra_Tabs_tabs_main {
         position: relative;
         width: 100%;
@@ -30,6 +35,10 @@
         min-width: 120px;
         height: 34px;
         flex-shrink: 0;
+
+        * {
+            -webkit-app-region: no-drag !important;
+        }
 
         button {
             position: absolute;
@@ -117,5 +126,8 @@
 
 .Hydra_Tabs_workarea {
     position: relative;
+     * {
+        -webkit-app-region: no-drag !important;
+    }
     height: 100%;
 }

@@ -27,6 +27,12 @@ body {
   display: flex;
   flex-direction: row;
   width: 100%;
+  // -webkit-user-select: none;
+  // -webkit-app-region: no-drag !important;
+  // * {
+  //   -webkit-app-region: no-drag !important;
+  // }
+
   height: 100%;
   // overflow: hidden;
 }
