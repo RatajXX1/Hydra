@@ -36,42 +36,60 @@ function createWindow() {
 
 }
 
-//actualDir, pathDir
 function PathWalk(ev, pathDir) {
-	let Output = {}
 	const ReadFiles = (paths) => {
 		const files = fs.readdirSync(paths);
 		const tempOutput = {}
 		files.forEach((file) => {
 			const filePath = path.join(paths, file);
 			const stats = fs.statSync(filePath);
-			
-
-			if (stats.isFile()) {
-				// It's a file
-				// console.log(filePath);
+			if (stats.isFile())
 			 	tempOutput[file] = filePath
-			} else if (stats.isDirectory()) {
-				// It's a directory
-				// console.log(filePath);
-				tempOutput[file] = ReadFiles(filePath); // Recursively walk through subdirectories
-			}
-
-			
+			else if (stats.isDirectory()) 
+				tempOutput[file] = ReadFiles(filePath); 		
 		});
 		return tempOutput
 	}
-	Output = ReadFiles(pathDir)
-	// ev.reply('filewalkOutput', Output);
-	// console.log("231", Output)
-	ev.returnValue =Output
-	return Output	
+	ev.returnValue = ReadFiles(pathDir)
+}
+
+function CreateDir(ev, pathDir) {
+	if (fs.existsSync(pathDir)) {
+		ev.returnValue = false
+		return
+	} else {
+		console.log(pathDir)
+		fs.mkdir(pathDir, (err) => {
+			// console.log("blad", err)
+		});
+		ev.returnValue = true
+	}
+}
+
+function writeFile(ev, pathDir, content) {
+	fs.writeFile(pathDir, content, (err) => {
+        if(err){
+			ev.returnValue = false
+			return
+        }
+                    
+		ev.returnValue = true
+    });
+}
+
+function removeFile(ev, pathDir) {
+	fs.unlinkSync(pathDir);;
+	ev.returnValue = true
 }
 
 
-
 app.on('ready', createWindow);
+
 ipcMain.on("PathWalk", (ev, args) => PathWalk(ev, args))
+ipcMain.on("MakeDir", (ev, args) => CreateDir(ev, args))
+ipcMain.on("removeFile", (ev, args) => removeFile(ev, args))
+ipcMain.on("writeFile", (ev, arg, content) => writeFile(ev, arg, content))
+
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
 		app.quit();

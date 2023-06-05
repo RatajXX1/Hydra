@@ -14,6 +14,7 @@ function Select() {
 
 type TextProps = {
     type: string,
+    style?: React.CSSProperties,
     placeholder?: string,
     className?: string,
     Icon?: FunctionComponent,
@@ -22,7 +23,7 @@ type TextProps = {
 
 function InputText(props: TextProps) {
     return (
-        <div className={"Hydra_Inputs_Text " + (props.className != undefined ? props.className : "")}>
+        <div style={props.style != undefined ? props.style : undefined}  className={"Hydra_Inputs_Text " + (props.className != undefined ? props.className : "")}>
             {
                 props.Icon != undefined && <props.Icon/>
             }

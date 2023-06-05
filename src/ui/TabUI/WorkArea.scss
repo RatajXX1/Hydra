@@ -126,7 +126,8 @@
 
 .Hydra_Tabs_workarea {
     position: relative;
-     * {
+    -webkit-app-region: no-drag !important;
+    & > * {
         -webkit-app-region: no-drag !important;
     }
     height: 100%;

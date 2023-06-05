@@ -7,6 +7,11 @@
     top: 0;
     right: 0;
 
+    -webkit-app-region: no-drag !important;
+    & > * {
+        -webkit-app-region: no-drag !important;
+    }
+
     .Hydra_Modal_area {
         position: relative;
         top: 30%;

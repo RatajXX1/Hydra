@@ -101,16 +101,20 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
         const OffsetScreen = 20
         const seletion = window.getSelection()
         if (seletion && this.scrollArea.current) {
-            const range = seletion.getRangeAt(0)
-            const pos = range.getClientRects()
-            // if (pos[0]) console.log(pos[0], this.scrollArea.current.scrollTop, this.scrollArea.current.clientHeight + this.scrollArea.current.scrollTop)
-            if (
-                pos[0] !== undefined &&
-                !((document.body.clientHeight - this.scrollArea.current.clientHeight) < pos[0].y - OffsetScreen && this.scrollArea.current.clientHeight > pos[0].y + OffsetScreen)
-            ) {
-                if ((document.body.clientHeight - this.scrollArea.current.clientHeight) > pos[0].y - OffsetScreen) this.scrollArea.current.scrollTop -= pos[0].y/2
-                else this.scrollArea.current.scrollTop += pos[0].y/2
-                this.UpdateScrollsPos()
+            try {
+                const range = seletion.getRangeAt(0)
+                const pos = range.getClientRects()
+                // if (pos[0]) console.log(pos[0], this.scrollArea.current.scrollTop, this.scrollArea.current.clientHeight + this.scrollArea.current.scrollTop)
+                if (
+                    pos[0] !== undefined &&
+                    !((document.body.clientHeight - this.scrollArea.current.clientHeight) < pos[0].y - OffsetScreen && this.scrollArea.current.clientHeight > pos[0].y + OffsetScreen)
+                ) {
+                    if ((document.body.clientHeight - this.scrollArea.current.clientHeight) > pos[0].y - OffsetScreen) this.scrollArea.current.scrollTop -= pos[0].y/2
+                    else this.scrollArea.current.scrollTop += pos[0].y/2
+                    this.UpdateScrollsPos()
+                }                
+            } catch (e) {
+
             }
         }
     }
@@ -120,8 +124,8 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
         const selection = window.getSelection();
         
         if (selection && this.scrollArea.current) {
-          const range = selection.getRangeAt(0);
           try {
+            const range = selection.getRangeAt(0);
             const focusElement = range.commonAncestorContainer as HTMLElement;
             const elementRect = focusElement.getBoundingClientRect();
             const scrollAreaRect = this.scrollArea.current.getBoundingClientRect();

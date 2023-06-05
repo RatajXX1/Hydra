@@ -21,7 +21,7 @@ class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
 
     state = {
-        ActiveItem: <FilesSideBar/>,
+        ActiveItem: <FilesSideBar Title="Notatki" MainPath="/Users/michalratajewski/Desktop/testFolder" Mode="notes"/>,
         resize: false,
         StartPos: 0,
         StartWidth: 0,
@@ -89,7 +89,7 @@ class SideBar extends React.Component {
                         <IconButton
                             Icon={FilesIcon}
                             OnClick={() => {
-                                this.SetActiveItem(<FilesSideBar/>)
+                                this.SetActiveItem(<FilesSideBar Title="Notatki" MainPath="/Users/michalratajewski/Desktop/testFolder" Mode="notes"/>)
                             }}
                         />
                         <IconButton
