@@ -12,11 +12,26 @@ type ContentTypes = {
     Ref?: React.RefObject<any>
 }
 
+type EdtorProps = {
+    FilePath: string,
+    BlockEdit?: boolean
+}
+
+const Commands = [
+    "Text",
+    "Quote",
+    "Tags",
+    "Gallery",
+    "Image",
+    "file",
+]
+
 class CommandPropmpt extends React.Component {
 
     state = {
         Command: ""
     }
+
 
     public SetCommand(command: string) {
         this.setState({...this.state, Command: command})
@@ -26,15 +41,31 @@ class CommandPropmpt extends React.Component {
         return (
             <div className="Hydra_BlockEdtior_commnad_work">
                 <ScrollArea>
-                    {
-                        (
-                            () => {
-                                const tab: React.ReactNode[] = []
-                                if (this.state.Command !== undefined && this.state.Command.length > 0)  for(let i = 0; i < 25; i++) tab.push(<a>{i.toString() + " " + this.state.Command}</a>)
-                                return tab
-                            }
-                        )()
-                    }                    
+                    <div className="Hydra_BlockEdtior_commnad_workarea">
+                        {
+                            (
+                                () => {
+                                    const tab: React.ReactNode[] = []
+                                    if (this.state.Command !== undefined && this.state.Command.length > 0)  
+                                        Commands.forEach(
+                                            e => {
+                                                tab.push(
+                                                    <div className="Hydra_BlockEdtior_commnad_workarea_item">
+                                                        <a>
+                                                            {
+                                                                e
+                                                            }
+                                                        </a>
+                                                    </div>
+                                                )
+                                            }
+                                        )
+                                        
+                                    return tab
+                                }
+                            )()
+                        }                             
+                    </div>
                 </ScrollArea>
             </div>
         )
@@ -42,7 +73,7 @@ class CommandPropmpt extends React.Component {
 
 }
 
-class BlockEditor extends React.Component {
+class BlockEditor extends React.Component<EdtorProps> {
     WorkArea = React.createRef<any>()
     CommnadBox = React.createRef<any>()
     Commnads = React.createRef<any>()

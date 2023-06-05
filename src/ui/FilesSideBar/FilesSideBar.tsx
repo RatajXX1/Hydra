@@ -7,6 +7,7 @@ import {ReactComponent as AddFolder} from "../../Images/addfolder.svg";
 import {ReactComponent as ArrowDown} from "../../Images/down.svg";
 import Modal from "../Modal/Modal";
 import { InputText } from "../Inputs/Inputs";
+import BlockEditor from "../BlockEditor/BlockEditor";
 
 type FilesSideBarProps = {
     Title: string;
@@ -60,7 +61,7 @@ class FilesSideBar extends React.Component<FilesSideBarProps> {
         else return path + "/" + pathb
     }
 
-    private FileOptions(ev: React.MouseEvent, mode: number, path: string) {
+    private FileOptions(ev: React.MouseEvent, mode: number, path: string, file: boolean) {
         if (this.FileOpt.current && ev.button === 2) {
             this.setState({
                 ...this.state,
@@ -74,6 +75,11 @@ class FilesSideBar extends React.Component<FilesSideBarProps> {
                 this.FileOpt.current.style.top = `${ev.clientY - this.FileOpt.current.clientHeight}px`
             else this.FileOpt.current.style.top = `${ev.clientY - 20}px`
             this.FileOpt.current.style.left = `${ev.clientX - 50}px`
+        } else if (ev.button === 0 && file) {
+            const name = path.split("/")
+            if (this.props.Mode === "notes") {
+                window.addTab(name[name.length - 1], <BlockEditor FilePath={path}/>)
+            }
         }
     }
 
@@ -89,12 +95,12 @@ class FilesSideBar extends React.Component<FilesSideBarProps> {
         const renderFileStructure = (structure: FileStructure, filepath: string) => {
             return Object.entries(structure).map(([name, value]) => {
               if (typeof value === 'string') {
-                return <li onMouseUp={(ev: React.MouseEvent) => this.FileOptions(ev, 2, value)} key={name}><span>{name}</span></li>;
+                return <li onMouseUp={(ev: React.MouseEvent) => this.FileOptions(ev, 2, value, true)} key={name}><span>{name}</span></li>;
               }
         
               return (
                 <li key={name}>
-                    <div onMouseUp={(ev: React.MouseEvent) => this.FileOptions(ev, 1, this.pathJoin(filepath ,name))}>
+                    <div onMouseUp={(ev: React.MouseEvent) => this.FileOptions(ev, 1, this.pathJoin(filepath ,name,), false)}>
                         <ArrowDown/>
                         <a>{name}</a>                        
                     </div>
