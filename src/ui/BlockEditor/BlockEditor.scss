@@ -107,8 +107,11 @@
                 }
 
                 &:hover {
-                    background-color: rgba(217, 217, 217, 0.39);
+                    background-color: rgba(217, 217, 217, 0.59);
                 }
+            }
+            .Hydra_BlockEdtior_commnad_workarea_item_selected {
+                background-color: rgba(217, 217, 217, 0.59);
             }
         }
 

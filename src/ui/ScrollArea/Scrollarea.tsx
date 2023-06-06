@@ -50,6 +50,7 @@ class ScrollArea extends React.Component<ScrollAreacProps> {
                 left: el.offsetLeft,
                 behavior: 'smooth',
             })
+            this.UpdateScrollsPos()
         }
     }
 

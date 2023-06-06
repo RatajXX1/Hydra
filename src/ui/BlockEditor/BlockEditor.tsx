@@ -27,43 +27,80 @@ const Commands = [
 ]
 
 class CommandPropmpt extends React.Component {
+    ScrollAlrea = React.createRef<any>()
 
     state = {
-        Command: ""
+        Command: "",
+        Selected: 0,
+        Arr: [] as string[]
     }
 
-
     public SetCommand(command: string) {
-        this.setState({...this.state, Command: command})
+        this.setState({
+            Selected: 0,
+            Command: command.replaceAll("/", ""),
+            Arr: this.SortCommnad(Commands, this.state.Command)
+        })
+    }
+    
+    SortCommnad(arr: string[], commnad: string) {
+        function compareBySimilarity(a: string, b: string): number {
+            function calculateSimilarity(str: string, target: string): number {
+                let count = 0;
+                for (let i = 0; i < str.length; i++) {
+                    if (
+                        str[i] !== undefined &&
+                        target[i] !== undefined &&
+                        str[i].toLowerCase() === target[i].toLowerCase()
+                        ) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+            
+            const similarityA = calculateSimilarity(a, commnad);
+            const similarityB = calculateSimilarity(b, commnad);
+            
+            if (similarityA < similarityB) {
+                return -1;
+            } else if (similarityA > similarityB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        return arr.sort(compareBySimilarity).reverse()
+    }
+
+    public ArrowToNext(Up:boolean) {
+        if (Up && this.state.Selected - 1 < 0) return
+        else if (!Up && this.state.Selected + 1 > Commands.length - 1) return
+        this.setState(
+            {...this.state, Selected: (Up ? this.state.Selected - 1 : this.state.Selected + 1)},
+            () => {
+                if (this.ScrollAlrea.current) this.ScrollAlrea.current.ScrollTo("Hydra_BlockEdtior_commnad_workarea_item_" + this.state.Arr[this.state.Selected])
+            }
+        )
     }
 
     render(): React.ReactNode {
         return (
             <div className="Hydra_BlockEdtior_commnad_work">
-                <ScrollArea>
+                <ScrollArea ref={this.ScrollAlrea}>
                     <div className="Hydra_BlockEdtior_commnad_workarea">
                         {
-                            (
-                                () => {
-                                    const tab: React.ReactNode[] = []
-                                    if (this.state.Command !== undefined && this.state.Command.length > 0)  
-                                        Commands.forEach(
-                                            e => {
-                                                tab.push(
-                                                    <div className="Hydra_BlockEdtior_commnad_workarea_item">
-                                                        <a>
-                                                            {
-                                                                e
-                                                            }
-                                                        </a>
-                                                    </div>
-                                                )
-                                            }
-                                        )
-                                        
-                                    return tab
-                                }
-                            )()
+                            (this.state.Command !== undefined) &&
+                                this.state.Arr.map(
+                                    (e, index) => <div id={"Hydra_BlockEdtior_commnad_workarea_item_" + e} className={"Hydra_BlockEdtior_commnad_workarea_item" + (this.state.Selected === index ? " Hydra_BlockEdtior_commnad_workarea_item_selected" : "")}>
+                                            <a>
+                                                {
+                                                    e
+                                                }
+                                            </a>
+                                        </div>
+                                )
                         }                             
                     </div>
                 </ScrollArea>
@@ -101,7 +138,7 @@ class BlockEditor extends React.Component<EdtorProps> {
             const range = selection.getRangeAt(0)
             const pos = range.getClientRects()
             if (pos[0]) {
-                this.CommnadBox.current.style.top = `${pos[0].top.toString()}px`
+                this.CommnadBox.current.style.top = `${(pos[0].top - 20).toString()}px`
                 this.CommnadBox.current.style.left = `${(pos[0].left - 400).toString()}px`   
                 const word = this.GetTextBefore().split("/")
                 this.state.Command = `/${word[word.length - 1]}`  
@@ -123,12 +160,16 @@ class BlockEditor extends React.Component<EdtorProps> {
     }
 
     private onKeyDown(key: React.KeyboardEvent<HTMLDivElement>) {
+        const styles = getComputedStyle(this.CommnadBox.current)
         if (key.key === "Enter") {
-            const styles = getComputedStyle(this.CommnadBox.current)
-            if (styles.display !== "none") this.CommnadBox.current.style.display = ""
-            if (this.state.Command !== "") this.state.Command = ""
             key.preventDefault()
-            this.AddNewBlockAndActive()
+            if (this.state.Command !== "" && styles.display !== "none") {
+
+            } else {
+                if (styles.display !== "none") this.CommnadBox.current.style.display = ""
+                if (this.state.Command !== "") this.state.Command = ""
+                this.AddNewBlockAndActive()                
+            }
         } else if (key.key === "Backspace") {
             const styles = getComputedStyle(this.CommnadBox.current)
             const lasttext = this.GetTextBefore()
@@ -149,16 +190,24 @@ class BlockEditor extends React.Component<EdtorProps> {
             }
         } else if (key.key === "/") {
             if (this.CommnadBox.current) {
-                const styles = getComputedStyle(this.CommnadBox.current)
                 if (styles.display === "none") this.CommnadBox.current.style.display = "block"
                 this.state.Command = "/"
             }
         } else if (key.key === " ") {
-            const styles = getComputedStyle(this.CommnadBox.current)
             if (styles.display !== "none") this.CommnadBox.current.style.display = ""
             if (this.state.Command !== "") {
                 this.state.Command = ""
                 // this.forceUpdate()
+            }
+        } else if (key.key === "ArrowUp") {
+            if (this.state.Command !== "" && styles.display !== "none") {
+                if (this.Commnads.current) this.Commnads.current.ArrowToNext(true)
+                key.preventDefault()
+            }
+        } else if (key.key === "ArrowDown") {
+            if (this.state.Command !== "" && styles.display !== "none") {
+                if (this.Commnads.current) this.Commnads.current.ArrowToNext(false)
+                key.preventDefault()
             }
         }
     }
