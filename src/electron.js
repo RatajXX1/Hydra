@@ -12,6 +12,9 @@ function createWindow() {
 			titleBarStyle: 'hidden',
 			trafficLightPosition: {x: 10, y:15},
 			frame: false,
+			// transparent: true,
+			// vibrancy: "under-window",
+			// visualEffectState: "active",
 			webPreferences: {
 				nodeIntegration: false,
 				preload: path.join(__dirname, 'preload.js')

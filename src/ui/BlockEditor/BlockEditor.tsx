@@ -1,13 +1,25 @@
 import React from "react";
 import "./BlockEditor.scss"
-import Blocks, { BlockTypes } from "./Blocks";
+import Blocks from "./Blocks";
 import {ReactComponent as DotsIcon} from "../../Images/move.svg";
 import {ReactComponent as AddIcon} from "../../Images/add.svg";
 import { IconButton } from "../Buttons/Buttons";
 import ScrollArea from "../ScrollArea/Scrollarea";
 
+const Commands = [
+    "Text",
+    "Quote",
+    "Tags",
+    "Gallery",
+    "Image",
+    "file",
+    "checkbox",
+    "list",
+    "Title",
+]
+
 type ContentTypes = {
-    Type: BlockTypes,
+    Type: typeof Commands[number],
     Content: string,
     Ref?: React.RefObject<any>
 }
@@ -17,14 +29,7 @@ type EdtorProps = {
     BlockEdit?: boolean
 }
 
-const Commands = [
-    "Text",
-    "Quote",
-    "Tags",
-    "Gallery",
-    "Image",
-    "file",
-]
+
 
 class CommandPropmpt extends React.Component {
     ScrollAlrea = React.createRef<any>()
@@ -117,7 +122,7 @@ class BlockEditor extends React.Component<EdtorProps> {
 
     state = {
         Content: [
-            {Type: "text", Content: "", Ref: React.createRef<any>()}
+            {Type: "Text", Content: "", Ref: React.createRef<any>()}
         ] as ContentTypes[],
         DraggedItem: -1,
         Command: ""
@@ -128,7 +133,7 @@ class BlockEditor extends React.Component<EdtorProps> {
     }
 
     public AddNewBlockAndActive() {
-        this.state.Content.push({Type: "text", Content: "", Ref: React.createRef<any>()})
+        this.state.Content.push({Type: "Text", Content: "", Ref: React.createRef<any>()})
         this.forceUpdate()
     }
 
@@ -159,12 +164,39 @@ class BlockEditor extends React.Component<EdtorProps> {
         return ""
     }
 
+    private GetCurrentBlockIndex():number {
+        const selection = window.getSelection()
+        if (selection) {
+            const range = selection.getRangeAt(0)
+            let el = range.commonAncestorContainer as HTMLElement
+            while (el.id == undefined || !el.id.startsWith("Block_")) {
+                if (el.parentElement == undefined) break
+                el = el.parentElement
+            }
+            if (
+                el.id != undefined ||
+                (el.id as string).startsWith("Block_")
+                ) 
+                return parseInt(el.id.split("_")[1])
+            else return -1
+        }
+        return -1
+    }
+
     private onKeyDown(key: React.KeyboardEvent<HTMLDivElement>) {
         const styles = getComputedStyle(this.CommnadBox.current)
         if (key.key === "Enter") {
             key.preventDefault()
             if (this.state.Command !== "" && styles.display !== "none") {
-
+                const index = this.GetCurrentBlockIndex()
+                if (index >= 0 && this.Commnads.current) {
+                    if (this.state.Content[index].Type !== Commands[this.Commnads.current.state.Selected]) {
+                        this.state.Content[index].Type = Commands[this.Commnads.current.state.Selected]
+                        if (styles.display !== "none") this.CommnadBox.current.style.display = ""
+                        if (this.state.Command !== "") this.state.Command = ""
+                        this.forceUpdate()                        
+                    }
+                }
             } else {
                 if (styles.display !== "none") this.CommnadBox.current.style.display = ""
                 if (this.state.Command !== "") this.state.Command = ""
@@ -326,4 +358,7 @@ class BlockEditor extends React.Component<EdtorProps> {
 
 }
 
+export {
+    Commands
+}
 export default BlockEditor

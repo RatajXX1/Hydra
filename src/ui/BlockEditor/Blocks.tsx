@@ -1,9 +1,8 @@
 import React from "react";
-
-type BlockTypes =  "text" | "list" | "gallery" | "image" | "checkbox"
+import { Commands } from "./BlockEditor";
 
 type BlockProps = {
-    type?: BlockTypes,
+    type?: typeof Commands[number],
     content?: string,
     onUpdate?: (text: string) => void,
 }
@@ -48,24 +47,45 @@ class Blocks extends React.Component<BlockProps> {
     }
 
     render(): React.ReactNode {
-        return (
-            <div 
-                contentEditable
-                className="Hydra_BlockEdtior_workarea_blocks"
-                ref={this.blockRef}
-                onClick={this.OnStart.bind(this)}
-                onKeyDown={this.onKeyDown.bind(this)}
-                onInput={this.onInput.bind(this)}
-                onBlur={this.onBlur.bind(this)}
-                dangerouslySetInnerHTML={{__html: this.props.content && this.props.content.length > 0 ? this.props.content : `<a class="Hydra_BlockEdtior_workarea_block_placeholder">Zacznij pisac ...</a>`}}
-            >
-            </div>
-        )
+        switch(this.props.type) {
+            case "Text":
+                return (
+                    <div 
+                        contentEditable
+                        className="Hydra_BlockEdtior_workarea_blocks"
+                        ref={this.blockRef}
+                        onClick={this.OnStart.bind(this)}
+                        onKeyDown={this.onKeyDown.bind(this)}
+                        onInput={this.onInput.bind(this)}
+                        onBlur={this.onBlur.bind(this)}
+                        dangerouslySetInnerHTML={{__html: this.props.content && this.props.content.length > 0 ? this.props.content : `<a class="Hydra_BlockEdtior_workarea_block_placeholder">Zacznij pisac ...</a>`}}
+                        spellCheck={false}
+                    >
+                    </div>
+                )
+            case "Quote":
+                return (
+                    <div className="Hydra_BlockEdtior_workarea_blocks">
+                        <div className="Hydra_BlockEdtior_workarea_blocks_quoteLine"></div>
+                        <div 
+                            contentEditable
+                            className="Hydra_BlockEdtior_workarea_blocks"
+                            ref={this.blockRef}
+                            onClick={this.OnStart.bind(this)}
+                            onKeyDown={this.onKeyDown.bind(this)}
+                            onInput={this.onInput.bind(this)}
+                            onBlur={this.onBlur.bind(this)}
+                            dangerouslySetInnerHTML={{__html: this.props.content && this.props.content.length > 0 ? this.props.content : `<a class="Hydra_BlockEdtior_workarea_block_placeholder">Zacznij pisac ...</a>`}}
+                            spellCheck={false}
+                        >
+                        </div>                        
+                    </div>
+
+                )
+        }
+
     }
 
 }
 
 export default Blocks
-export type {
-    BlockTypes
-}

@@ -12,12 +12,15 @@
 
 .Hydra_BlockEdtior_workarea {
     position: relative;
-    width: 70%;
+    width: 98%;
     left: 50%;
     left: 50%;
     transform: translate(-50%, 0);
     padding-top: 100px;
     padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .Hydra_BlockEdtior_workarea_block {
@@ -25,12 +28,20 @@
     display: flex;
     flex-direction: row;
     justify-content: stretch;
-    width: 100%;
+    width: 70%;
     margin-bottom: 10px;
     // padding: 5px;
     background-color: #F4F4F4;
     transition: .2s;
 
+    .Hydra_BlockEdtior_workarea_blocks_quoteLine {
+        background-color: #1EBBFF;
+        position: absolute;
+        height: 100%;
+        width: 4px;
+        left: 0;
+        border-radius: 5px;
+    }
 
     &:hover {
         .Hydra_BlockEdtior_workarea_blocks {
@@ -43,18 +54,26 @@
 
     .Hydra_BlockEdtior_workarea_blocks {
         position: relative;
-        width: 100%;
+        width: calc(100% - 60px);
         padding: 5px;
         outline: none;
     }
 
     .Hydra_BlockEdtior_workarea_block_options {
         position: relative;
-        display: none;
+        display: flex;
         flex-direction: row;
-        justify-content: start;
+        justify-content: flex-start;
+        
         width: 50px;
+        height: 100%;
+        
+        top: 50%;
+        // transform: translate(0, -50%);
+        box-sizing: border-box;
+        padding-top: 8px;
         // left: -55px;
+
         svg {
             fill: black;
             stroke: black;
