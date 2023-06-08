@@ -29,8 +29,6 @@ type EdtorProps = {
     BlockEdit?: boolean
 }
 
-
-
 class CommandPropmpt extends React.Component {
     ScrollAlrea = React.createRef<any>()
 
@@ -133,7 +131,7 @@ class BlockEditor extends React.Component<EdtorProps> {
     }
 
     public AddNewBlockAndActive() {
-        this.state.Content.push({Type: "Text", Content: "", Ref: React.createRef<any>()})
+        this.state.Content.push({Type: "Text", Content:  "", Ref: React.createRef<any>()})
         this.forceUpdate()
     }
 
@@ -164,6 +162,17 @@ class BlockEditor extends React.Component<EdtorProps> {
         return ""
     }
 
+    private RemoveCommand(IndexItem: number) {
+        const seletion = window.getSelection()
+        if (seletion) {
+            const range = seletion.getRangeAt(0)
+            const el = range.commonAncestorContainer
+            let textContent = el.textContent!.slice(0, range.startOffset)
+            textContent = textContent.slice(0 , textContent.length - this.state.Command.length) + el.textContent!.slice(range.endOffset, el.textContent!.length)
+            this.state.Content[IndexItem].Content = textContent
+        }
+    }
+
     private GetCurrentBlockIndex():number {
         const selection = window.getSelection()
         if (selection) {
@@ -191,6 +200,7 @@ class BlockEditor extends React.Component<EdtorProps> {
                 const index = this.GetCurrentBlockIndex()
                 if (index >= 0 && this.Commnads.current) {
                     if (this.state.Content[index].Type !== Commands[this.Commnads.current.state.Selected]) {
+                        this.RemoveCommand(index)
                         this.state.Content[index].Type = Commands[this.Commnads.current.state.Selected]
                         if (styles.display !== "none") this.CommnadBox.current.style.display = ""
                         if (this.state.Command !== "") this.state.Command = ""
@@ -332,7 +342,7 @@ class BlockEditor extends React.Component<EdtorProps> {
                                                             onMouseDown={this.StartDrag.bind(this, index)}
                                                         />
                                                     </div>
-                                                    <Blocks 
+                                                    <Blocks
                                                         type={e.Type}
                                                         ref={e.Ref}
                                                         content={e.Content}
