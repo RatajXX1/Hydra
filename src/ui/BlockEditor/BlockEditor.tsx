@@ -314,7 +314,23 @@ class BlockEditor extends React.Component<EdtorProps> {
                         <div ref={this.CommnadBox} className="Hydra_BlockEdtior_commnad_main">
                             <CommandPropmpt ref={this.Commnads}/>
                         </div>
-
+                        <div className="Hydra_BlockEdtior_workarea_path">
+                            <a>
+                                {
+                                    (
+                                        () => {
+                                            let path = this.props.FilePath.replaceAll("/Users/michalratajewski/Desktop/testFolder", "").split("/")
+                                            
+                                            if (path.length > 3) {
+                                                return "..." + path.join(" / ") 
+                                            }
+                                            return path.join(" / ")
+                                        }
+                                    )()
+                                    
+                                }
+                            </a>
+                        </div>
                         {
                             (
                                 () => {
