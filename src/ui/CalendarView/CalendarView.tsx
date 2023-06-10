@@ -120,6 +120,7 @@ class CalendarView extends React.Component {
                                 Icon={Next}
                                 style={{
                                     transform: "rotate(180deg)",
+                                    
                                 }}
                             />
                         </div>
@@ -142,12 +143,10 @@ class CalendarView extends React.Component {
                         </h1>                        
                     </div>
                     <div>
-                        <IconButton
-                            Icon={Add}
-                            style={{
-                                stroke: "red"
-                            }}
-                        />
+                        <div className="Hydra_calendarview_floatadd">
+                            <a>Dodaj</a>
+                            <Add/>
+                        </div>
                         <span 
                             onClick={this.ChangeView.bind(this, 1)}
                             style={{borderRadius: "5px 0 0 5px"}}
@@ -161,6 +160,7 @@ class CalendarView extends React.Component {
                         >Miesiąc</span>
                     </div>
                 </div>
+
                 <div className="Hydra_calendarview_workarea">
                     <div className="Hydra_calendarview_time_headers">
                         {this.state.Mode !== 3 && <div style={{flexShrink: 0}}></div>}

@@ -9,6 +9,30 @@
         -webkit-app-region: no-drag !important;
     }
 
+    .Hydra_calendarview_floatadd {
+        position: relative;
+        float: right;
+        background-color: rgba(239, 239, 239, 0.87);
+        height: 100%;
+        width: 100px;
+        margin-right: 20px;
+        padding: 5px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        a {
+            width: 20%;
+        }
+        svg {
+            stroke: #4D4D4D;
+            position: relative;
+            width: 30px;
+            height: 100%;
+        }
+    }
+
     .Hydra_calendarview_header {
         position: relative;
         width: 98%;
@@ -34,6 +58,17 @@
                 cursor: pointer;
                 color: #4D4D4D;
             }
+
+            button {
+                // height: 100px;
+                width: 35px;
+                flex-shrink: 0;
+                svg {
+                    height: 50px;
+                    width: 30px;
+                }
+            }
+
         }
 
         h1 {
