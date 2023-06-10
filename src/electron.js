@@ -46,6 +46,7 @@ function PathWalk(ev, pathDir) {
 		files.forEach((file) => {
 			const filePath = path.join(paths, file);
 			const stats = fs.statSync(filePath);
+			if (file.startsWith(".")) return
 			if (stats.isFile())
 			 	tempOutput[file] = filePath
 			else if (stats.isDirectory()) 

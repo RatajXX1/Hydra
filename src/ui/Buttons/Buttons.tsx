@@ -3,7 +3,7 @@ import "./Buttons.scss";
 
 type ButtonProps = {
     Icon: FunctionComponent, 
-    style?: Object | undefined, 
+    style?: React.CSSProperties | undefined, 
     OnClick?: () => void,
     onMouseDown?: () => void,
     onMouseUp?: () => void,
