@@ -142,7 +142,7 @@ class BlockEditor extends React.Component<EdtorProps> {
             const pos = range.getClientRects()
             if (pos[0]) {
                 this.CommnadBox.current.style.top = `${(pos[0].top - 20).toString()}px`
-                this.CommnadBox.current.style.left = `${(pos[0].left - 400).toString()}px`   
+                this.CommnadBox.current.style.left = `${(pos[0].left - 250).toString()}px`   
                 const word = this.GetTextBefore().split("/")
                 this.state.Command = `/${word[word.length - 1]}`  
                 if (this.Commnads.current) this.Commnads.current.SetCommand(this.state.Command)

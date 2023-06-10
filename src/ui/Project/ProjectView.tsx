@@ -12,7 +12,7 @@ class ProjectView extends React.Component {
             <div className="Hydra_ProjectView_main">
                 <div className="Hydra_ProjectView_header">
                     <h1>
-                        PIKA 2.0
+                        Hydra
                         <IconButton
                             Icon={EditIcon}
                         />
@@ -43,7 +43,7 @@ class ProjectView extends React.Component {
                                                                 for(let d = 0; d < 1*(i + 1); d++) 
                                                                     tab.push(
                                                                         <div>
-                                                                            <span>Scrathdjskakldsajkldjsakldjsakldjakldjsakljdsakldjkslajdkslajdksaljdklsajdklsajkl</span>
+                                                                            <span>simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
                                                                             <IconButton
                                                                                 Icon={EditIcon}
                                                                             />
