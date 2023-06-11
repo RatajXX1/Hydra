@@ -26,7 +26,7 @@ function IconButton(props: ButtonProps) {
 
 type NormalButtonProps = {
     text: string,
-    style?: Object | undefined, 
+    style?: React.CSSProperties | undefined, 
     OnClick?: () => void,
     onMouseDown?: () => void,
     onMouseUp?: () => void,
@@ -44,7 +44,7 @@ function Button(props: NormalButtonProps) {
         <button 
             style={props.style != undefined ? props.style : undefined} 
             className={"Hydra_Buttons_button" + (props.variant != undefined? " " + NormalButtonsStyle[props.variant] : " Hydra_Buttons_button_text") + (props.Seleted? " Hydra_Buttons_iconbutton_selected" : "")}
-            onClick={props.OnClick}
+            onClick={props.OnClick != undefined ? props.OnClick : () => {}}
             onMouseDown={props.onMouseDown}
             onMouseUp={props.onMouseUp}
         >

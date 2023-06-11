@@ -1,20 +1,23 @@
 const { BrowserWindow, app, ipcMain} = require("electron");
+const { screen } = require("electron/main");
 const fs = require('fs');
 const path = require('path');
 
 let mainWindow = null
 
 function createWindow() {
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 	mainWindow = new BrowserWindow({
-			width: 800,
-			height: 600,
+			width: Math.floor(width * 0.5),
+			height: Math.floor(height * 0.8),
 			focusable: true,
 			titleBarStyle: 'hidden',
 			trafficLightPosition: {x: 10, y:15},
 			frame: false,
-			// transparent: true,
-			// vibrancy: "under-window",
-			// visualEffectState: "active",
+			minHeight: 420,
+			minWidth: 800,
+			title: "Hydra",
+			center: true,
 			webPreferences: {
 				nodeIntegration: false,
 				preload: path.join(__dirname, 'preload.js')
@@ -86,7 +89,7 @@ function removeFile(ev, pathDir) {
 	ev.returnValue = true
 }
 
-
+app.setName("Hydra")
 app.on('ready', createWindow);
 
 ipcMain.on("PathWalk", (ev, args) => PathWalk(ev, args))

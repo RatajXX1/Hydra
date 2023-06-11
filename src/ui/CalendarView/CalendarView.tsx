@@ -1,9 +1,11 @@
 import React from "react";
 import ScrollArea from "../ScrollArea/Scrollarea";
-import { IconButton } from "../Buttons/Buttons";
+import { Button, IconButton } from "../Buttons/Buttons";
 import {ReactComponent as Next} from "../../Images/nextday.svg";
 import {ReactComponent as Add} from "../../Images/add.svg";
 import "./CalendarView.scss";
+import Modal from "../Modal/Modal";
+import { CalendarWidget, InputText } from "../Inputs/Inputs";
 
 const MonthNames = [
     "Styczeń",
@@ -35,7 +37,8 @@ class CalendarView extends React.Component {
     state = {
         ActaulDate: new Date(),
         WeekDay: [] as Date[],
-        Mode: 2 // 1 - day 2 - week 3 - month
+        Mode: 2, // 1 - day 2 - week 3 - month
+        AddModal: false,
     }
 
     componentDidMount(): void {
@@ -120,7 +123,6 @@ class CalendarView extends React.Component {
                                 Icon={Next}
                                 style={{
                                     transform: "rotate(180deg)",
-                                    
                                 }}
                             />
                         </div>
@@ -143,7 +145,12 @@ class CalendarView extends React.Component {
                         </h1>                        
                     </div>
                     <div>
-                        <div className="Hydra_calendarview_floatadd">
+                        <div 
+                            onClick={() => {
+                                this.setState({...this.state, AddModal: true})
+                            }}
+                            className="Hydra_calendarview_floatadd"
+                        >
                             <a>Dodaj</a>
                             <Add/>
                         </div>
@@ -273,9 +280,44 @@ class CalendarView extends React.Component {
                         </div>
                     </ScrollArea>
                 </div>
+                <Modal
+                    isOpen={this.state.AddModal}
+                    OnClose={() => {
+                        this.setState({...this.state, AddModal: false})
+                    }}
+                >
+                    <form>
+                        <InputText
+                            placeholder="Nazwa"
+                            type="text"
+                        />
+                        <CalendarWidget/>
+                    </form>
+                    <div style={{height: "30px"}}>
+                        <Button
+                            text="Dodaj"
+                            variant="filled"
+                            style={{
+                                float: "right"
+                            }}
+                        />
+                        <Button
+                            text="anuluj"
+                            OnClick={() => {
+                                this.setState({...this.state, AddModal: false})
+                            }}
+                            style={{
+                                float: "right"
+                            }}
+                        />                        
+                    </div>
+                </Modal>
             </div>
         )
     }
 }
 
 export default CalendarView;
+export {
+    MonthNames
+}
