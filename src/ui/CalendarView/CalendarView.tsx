@@ -5,7 +5,7 @@ import {ReactComponent as Next} from "../../Images/nextday.svg";
 import {ReactComponent as Add} from "../../Images/add.svg";
 import "./CalendarView.scss";
 import Modal from "../Modal/Modal";
-import { CalendarWidget, InputText } from "../Inputs/Inputs";
+import { CalendarWidget, HourSelector, InputText } from "../Inputs/Inputs";
 
 const MonthNames = [
     "Styczeń",
@@ -291,9 +291,16 @@ class CalendarView extends React.Component {
                             placeholder="Nazwa"
                             type="text"
                         />
-                        <CalendarWidget/>
+                        <div className="Hydra_calendarview_addmodal_timeselect">
+                            <CalendarWidget/>
+                            <HourSelector/>
+                            <a>-</a>
+                            <CalendarWidget/>
+                            <HourSelector/>
+                        </div>
+                        
                     </form>
-                    <div style={{height: "30px"}}>
+                    <div style={{height: "30px", marginTop: "10px"}}>
                         <Button
                             text="Dodaj"
                             variant="filled"

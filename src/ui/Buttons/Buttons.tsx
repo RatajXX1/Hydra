@@ -7,12 +7,14 @@ type ButtonProps = {
     OnClick?: () => void,
     onMouseDown?: () => void,
     onMouseUp?: () => void,
-    Seleted?: boolean
+    Seleted?: boolean,
+    type?: "button" | "submit"
 }
 
 function IconButton(props: ButtonProps) {
     return (
         <button 
+            type={props.type != undefined ? props.type! : "button"}
             style={props.style != undefined ? props.style : undefined} 
             className={"Hydra_Buttons_iconbutton" + (props.Seleted? " Hydra_Buttons_iconbutton_selected" : "")}
             onClick={props.OnClick}
@@ -31,7 +33,8 @@ type NormalButtonProps = {
     onMouseDown?: () => void,
     onMouseUp?: () => void,
     Seleted?: boolean,
-    variant?: "text" | "filled"
+    variant?: "text" | "filled",
+    type?: "button" | "submit"
 }
 
 const NormalButtonsStyle = {
@@ -42,6 +45,7 @@ const NormalButtonsStyle = {
 function Button(props: NormalButtonProps) {
     return (
         <button 
+            type={props.type != undefined ? props.type! : "button"}
             style={props.style != undefined ? props.style : undefined} 
             className={"Hydra_Buttons_button" + (props.variant != undefined? " " + NormalButtonsStyle[props.variant] : " Hydra_Buttons_button_text") + (props.Seleted? " Hydra_Buttons_iconbutton_selected" : "")}
             onClick={props.OnClick != undefined ? props.OnClick : () => {}}
