@@ -5,7 +5,7 @@ import {ReactComponent as Next} from "../../Images/nextday.svg";
 import {ReactComponent as Add} from "../../Images/add.svg";
 import "./CalendarView.scss";
 import Modal from "../Modal/Modal";
-import { CalendarWidget, HourSelector, InputText } from "../Inputs/Inputs";
+import { CalendarWidget, HourSelector, InputText, InputTextArea } from "../Inputs/Inputs";
 
 const MonthNames = [
     "Styczeń",
@@ -298,7 +298,13 @@ class CalendarView extends React.Component {
                             <CalendarWidget/>
                             <HourSelector/>
                         </div>
-                        
+                        <InputTextArea
+                            placeholder="Opis"
+                            style={{
+                                marginTop: "10px",
+                                height: "100px"
+                            }}
+                        />
                     </form>
                     <div style={{height: "30px", marginTop: "10px"}}>
                         <Button
