@@ -21,6 +21,7 @@ type TextProps = {
     type: string,
     style?: React.CSSProperties,
     placeholder?: string,
+    defaultValue?: string,
     className?: string,
     Icon?: FunctionComponent,
     OnChangeValue?: (arg: React.ChangeEvent<HTMLInputElement>) => void
@@ -37,6 +38,7 @@ function InputText(props: TextProps) {
                 type={props.type}
                 placeholder={props.placeholder}
                 onChange={props.OnChangeValue}
+                defaultValue={props.defaultValue}
             />
         </div>
     )

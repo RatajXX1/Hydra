@@ -8,6 +8,7 @@ import {ReactComponent as ArrowDown} from "../../Images/down.svg";
 import Modal from "../Modal/Modal";
 import { InputText } from "../Inputs/Inputs";
 import BlockEditor from "../BlockEditor/BlockEditor";
+import ProjectView from "../Project/ProjectView";
 
 type FilesSideBarProps = {
     Title: string;
@@ -79,6 +80,8 @@ class FilesSideBar extends React.Component<FilesSideBarProps> {
             const name = path.split("/")
             if (this.props.Mode === "notes") {
                 window.addTab(name[name.length - 1], <BlockEditor FilePath={path}/>)
+            } else {
+                window.addTab(name[name.length - 1], <ProjectView FilePath={path}/>)
             }
         }
     }

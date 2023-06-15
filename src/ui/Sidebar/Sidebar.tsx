@@ -7,12 +7,9 @@ import {ReactComponent as ProjectsIcon} from "../../Images/projects.svg";
 import {ReactComponent as ListIcon} from "../../Images/list.svg";
 import {ReactComponent as SettingsIcon} from "../../Images/settings.svg";
 import {ReactComponent as SearchIcon} from "../../Images/search.svg";
-import { RichEditor } from "../RichEditor/Richeditor";
-import BlockEditor from "../BlockEditor/BlockEditor";
 import FilesSideBar from "../FilesSideBar/FilesSideBar";
 import SettingsView from "../Settings/Settings";
 import CalendarView from "../CalendarView/CalendarView";
-import ProjectView from "../Project/ProjectView";
 import Modal from "../Modal/Modal";
 import { InputText } from "../Inputs/Inputs";
 import ScrollArea from "../ScrollArea/Scrollarea";
@@ -21,7 +18,7 @@ class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
 
     state = {
-        ActiveItem: <FilesSideBar Title="Notatki" MainPath="/Users/michalratajewski/Desktop/testFolder" Mode="notes"/>,
+        ActiveItem: "notes" as "notes" | "projects" | null,
         resize: false,
         StartPos: 0,
         StartWidth: 0,
@@ -39,12 +36,12 @@ class SideBar extends React.Component {
         document.removeEventListener("mouseup", this.onMouseUP.bind(this))
     }
 
-    public SetActiveItem(Item: JSX.Element) {
+    public SetActiveItem(Item: string) {
         if (this.state.ActiveItem == null) {
             this.setState({...this.state, ActiveItem: Item})
             return
         }
-        if (this.state.ActiveItem.type != Item.type) {
+        if (this.state.ActiveItem != Item) {
             this.setState({...this.state, ActiveItem: Item})
         } else {
             this.setState({...this.state, ActiveItem: null})
@@ -89,7 +86,7 @@ class SideBar extends React.Component {
                         <IconButton
                             Icon={FilesIcon}
                             OnClick={() => {
-                                this.SetActiveItem(<FilesSideBar Title="Notatki" MainPath="/Users/michalratajewski/Desktop/testFolder" Mode="notes"/>)
+                                this.SetActiveItem("notes")
                             }}
                         />
                         <IconButton
@@ -104,13 +101,13 @@ class SideBar extends React.Component {
                             Icon={ProjectsIcon}
                             OnClick={() => {
                                 if (window.addIfTab !== undefined) {
-                                    window.addIfTab("Projekty", <ProjectView/>)
+                                    this.SetActiveItem("projects")
                                 }
                             }}
                         />
                         <IconButton
                             Icon={ListIcon}
-                        />
+                        />.
                     </div> 
                     <div>
                         <IconButton
@@ -134,7 +131,7 @@ class SideBar extends React.Component {
                     this.state.ActiveItem != null && 
                     <div className="Hydra_Sidebar_workarea">
                     {
-                        this.state.ActiveItem
+                        <FilesSideBar Title={(this.state.ActiveItem && this.state.ActiveItem == "projects") ? "Projekty" : "Notatki"} MainPath="/Users/michalratajewski/Desktop/testFolder" Mode={this.state.ActiveItem ? this.state.ActiveItem: "projects"}/>
                     }
                     </div>
                 }

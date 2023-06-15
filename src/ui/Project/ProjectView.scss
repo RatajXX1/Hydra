@@ -6,6 +6,10 @@
     flex-direction: column;
     align-items: center;
 
+    * {
+        -webkit-app-region: no-drag !important;
+    }
+
     .Hydra_ProjectView_header {
         position: relative;
         display: block;
@@ -53,7 +57,7 @@
     .Hydra_ProjectView_columns {
         position: relative;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         display: flex;
         flex-direction: row;
         // padding-top: 10px;

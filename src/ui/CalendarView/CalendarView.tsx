@@ -33,6 +33,7 @@ const DaysNames = [
 ]
 
 class CalendarView extends React.Component {
+    WorkAreaScroll = React.createRef<any>()
 
     state = {
         ActaulDate: new Date(),
@@ -42,7 +43,17 @@ class CalendarView extends React.Component {
     }
 
     componentDidMount(): void {
-        // console.log(this.state)
+        this.scrollToHour()
+    }
+
+    private scrollToHour() {
+        if (this.WorkAreaScroll.current) {
+            const time = [
+                this.state.ActaulDate.getHours(),
+                this.state.ActaulDate.getMinutes()
+            ]
+            this.WorkAreaScroll.current.ScrollTo(`Hydra_calendarview_time_area_hours_item_${time[1] > 30 ? time[0] : time[0] + 1}${time[1] > 30 ? "00": "30"}`)
+        }
     }
 
     public ChangeView(mode: number) {
@@ -118,11 +129,31 @@ class CalendarView extends React.Component {
                         <div>
                             <IconButton
                                 Icon={Next}
+                                OnClick={() => {
+                                    if (this.state.Mode === 1) 
+                                        this.state.ActaulDate.setDate(this.state.ActaulDate.getDate() - 1)
+                                    else if (this.state.Mode === 2)
+                                        this.state.ActaulDate.setDate(this.state.ActaulDate.getDate() - 7)
+                                    else 
+                                        this.state.ActaulDate.setMonth(this.state.ActaulDate.getMonth() - 1)
+                                    this.state.WeekDay = this.GetWeekDays()
+                                    this.forceUpdate()
+                                }}
                             />
                             <IconButton
                                 Icon={Next}
                                 style={{
                                     transform: "rotate(180deg)",
+                                }}
+                                OnClick={() => {
+                                    if (this.state.Mode === 1) 
+                                        this.state.ActaulDate.setDate(this.state.ActaulDate.getDate() + 1)
+                                    else if (this.state.Mode === 2)
+                                        this.state.ActaulDate.setDate(this.state.ActaulDate.getDate() + 7)
+                                    else 
+                                        this.state.ActaulDate.setMonth(this.state.ActaulDate.getMonth() + 1)
+                                    this.state.WeekDay = this.GetWeekDays()
+                                    this.forceUpdate()
                                 }}
                             />
                         </div>
@@ -190,7 +221,7 @@ class CalendarView extends React.Component {
                             )()
                         }
                     </div>
-                    <ScrollArea>
+                    <ScrollArea ref={this.WorkAreaScroll}>
                         <div className="Hydra_calendarview_time_area">
                             {
                                 this.state.Mode !== 3 && <div className="Hydra_calendarview_time_area_hours">
@@ -201,12 +232,12 @@ class CalendarView extends React.Component {
                                                 for(let i = 1; i < 24; i+=1)
                                                 {
                                                     tab.push(
-                                                        <div className="Hydra_calendarview_time_area_hours_item">
+                                                        <div id={`Hydra_calendarview_time_area_hours_item_${i}00`} className="Hydra_calendarview_time_area_hours_item">
                                                             <a>{i.toString().padStart(2, "0")}:00</a>
                                                         </div>
                                                     )
                                                     tab.push(
-                                                        <div className="Hydra_calendarview_time_area_hours_item">
+                                                        <div id={`Hydra_calendarview_time_area_hours_item_${i}30`} className="Hydra_calendarview_time_area_hours_item">
                                                             <a>{i.toString().padStart(2, "0")}:30</a>
                                                         </div>
                                                     )

@@ -3,18 +3,69 @@ import ScrollArea from "../ScrollArea/Scrollarea";
 import "./ProjectView.scss";
 import {ReactComponent as EditIcon} from "../../Images/pen.svg";
 import {ReactComponent as AddIcon} from "../../Images/add.svg";
-import { IconButton } from "../Buttons/Buttons";
+import { Button, IconButton } from "../Buttons/Buttons";
+import Modal from "../Modal/Modal";
+import { InputText, InputTextArea } from "../Inputs/Inputs";
 
-class ProjectView extends React.Component {
+type ProjectViewProps = {
+    FilePath: string,
+    BlockEdit?: boolean
+}
+
+type ColumnItem = {
+    title: string,
+    desc: string
+}
+
+type Column = {
+    StageName: string,
+    Content: ColumnItem[]
+}
+
+type Columns = Column[]
+
+
+class ProjectView extends React.Component<ProjectViewProps> {
+
+    preState = {
+        title: "",
+        stageName: ""
+    }
+
+    state = {
+        title: "Untitled",
+        titleModal: false,
+        addModal: false,
+        itemModal: false,
+        selectedColumn: -1,
+        content: [] as Columns
+    };
+
+    private AddNewItem(title: string, desc:string) {
+
+    }
+
+    private AddNewStage(StageName: string) {
+        this.state.content.push({
+            StageName: StageName,
+            Content: []
+        } as Column)
+        this.forceUpdate()
+    }
 
     render(): React.ReactNode {
         return (
             <div className="Hydra_ProjectView_main">
                 <div className="Hydra_ProjectView_header">
                     <h1>
-                        Hydra
+                        {
+                            this.state.title
+                        }
                         <IconButton
                             Icon={EditIcon}
+                            OnClick={() => {
+                                this.setState({...this.state, titleModal: true})
+                            }}
                         />
                     </h1>
                 </div>
@@ -22,66 +73,194 @@ class ProjectView extends React.Component {
                     <ScrollArea>
                         <div className="Hydra_ProjectView_columns">
                             {
-                                (
-                                    () => {
-                                        const tab: React.ReactNode[] = []
-                                        
-                                        for(let i = 0; i < 8; i++) 
-                                            tab.push(
-                                                <div className="Hydra_ProjectView_column">
-                                                    <a>
-                                                        Stage {i + 1}
-                                                        <IconButton
-                                                            Icon={AddIcon}
-                                                        />
-                                                    </a>
-                                                    {
-                                                        (
-                                                            () => {
-                                                                const tab: React.ReactNode[] = []
-                                                                
-                                                                for(let d = 0; d < 1*(i + 1); d++) 
-                                                                    tab.push(
-                                                                        <div>
-                                                                            <span>simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
-                                                                            <IconButton
-                                                                                Icon={EditIcon}
-                                                                            />
-                                                                        </div>
-                                                                    )
-                                                                
-                                                                    tab.push(
-                                                                        <div className="Hydra_ProjectView_column_item_add">
-                                                                            <AddIcon/>
-                                                                        </div>
-                                                                    )
-
-                                                                return tab
-                                                            }
-                                                        )()
+                                this.state.content.map(
+                                    (e,i) => {
+                                    return (
+                                        <div className="Hydra_ProjectView_column">
+                                            <a>
+                                                {
+                                                    e.StageName
+                                                }
+                                                <IconButton
+                                                    Icon={AddIcon}
+                                                />
+                                            </a>
+                                            {
+                                                e.Content.map(
+                                                    d => {
+                                                        return (
+                                                            <div>
+                                                                <span>simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+                                                                <IconButton
+                                                                    Icon={EditIcon}
+                                                                />
+                                                            </div>
+                                                        )
                                                     }
-                                                </div>
-                                            )
-                                        
-                                        tab.push(
-                                            <div className="Hydra_ProjectView_column">
-                                                {/* <div className="Hydra_ProjectView_column_item_add">
-                                                    <AddIcon/>
-                                                </div> */}
-                                                <div style={{height: "100%", flexShrink: "0"}} className="Hydra_ProjectView_column_item_add">
-                                                    <AddIcon/>
-                                                </div>
+                                                )
+                                            }                        
+                                            <div 
+                                                className="Hydra_ProjectView_column_item_add"
+                                                onClick={() => {
+                                                    this.setState({...this.state, itemModal: true, selectedColumn: i})
+                                                }}
+                                            >
+                                                <AddIcon/>
                                             </div>
-                                        )
-
-                                        return tab
-                                    }
-                                )()
+                                        </div>
+                                    )}
+                                )
                             }
-
+                            <div className="Hydra_ProjectView_column">
+                                <div 
+                                    style={{height: "100%", flexShrink: "0"}}
+                                    className="Hydra_ProjectView_column_item_add"
+                                    onClick={() => {
+                                        this.setState({...this.state, addModal: true})
+                                    }}
+                                >
+                                    <AddIcon/>
+                                </div>
+                            </div>
                         </div>
                     </ScrollArea>
                 </div>
+                <Modal
+                    isOpen={this.state.titleModal}
+                    OnClose={() => {
+                        this.setState({...this.state, titleModal: false})
+                    }}
+                >
+                    <InputText
+                        type="text"
+                        placeholder="Nazwa projektu"
+                        defaultValue={this.state.title}
+                        OnChangeValue={e => {
+                            this.preState.title = e.target.value
+                        }}
+                    />
+                    <div
+                        style={{
+                            height: "30px"
+                        }}
+                    >
+                        <Button
+                            text="Zapisz"
+                            variant="filled"
+                            style={{
+                                float: "right"
+                            }}
+                            OnClick={() => {
+                                this.setState({
+                                    ...this.state, 
+                                    titleModal: false,
+                                    title: this.preState.title != this.state.title ? this.preState.title : this.state.title
+                                })
+                            }}
+                        />
+                        <Button
+                            text="Anuluj"
+                            style={{
+                                float: "right"
+                            }}
+                            OnClick={() => {
+                                this.setState({...this.state, titleModal: false})
+                            }}
+                        />
+                    </div>
+                </Modal>
+                <Modal
+                    isOpen={this.state.addModal}
+                    OnClose={() => {
+                        this.setState({...this.state, addModal: false})
+                    }}
+                >
+                    <InputText
+                        type="text"
+                        placeholder="Nazwa etapu"
+                        OnChangeValue={e => {
+                            this.preState.stageName = e.target.value
+                        }}
+                    />
+                    <div
+                        style={{
+                            height: "30px"
+                        }}
+                    >
+                        <Button
+                            text="Zapisz"
+                            variant="filled"
+                            style={{
+                                float: "right"
+                            }}
+                            OnClick={() => {
+                                this.setState({
+                                    ...this.state, 
+                                    addModal: false,
+                                })
+                                this.AddNewStage(this.preState.stageName)
+                            }}
+                        />
+                        <Button
+                            text="Anuluj"
+                            style={{
+                                float: "right"
+                            }}
+                            OnClick={() => {
+                                this.setState({...this.state, addModal: false})
+                            }}
+                        />
+                    </div>
+                </Modal>
+                <Modal
+                    isOpen={this.state.itemModal}
+                    OnClose={() => {
+                        this.setState({...this.state, itemModal: false})
+                    }}
+                >
+                    <InputText
+                        type="text"
+                        placeholder="Nazwa"
+                        OnChangeValue={e => {
+                            this.preState.stageName = e.target.value
+                        }}
+                    />
+                    <InputTextArea
+                        placeholder="Opis"
+                        style={{
+                            height: "200px"
+                        }}
+                    />
+                    <div
+                        style={{
+                            height: "30px"
+                        }}
+                    >
+                        <Button
+                            text="Zapisz"
+                            variant="filled"
+                            style={{
+                                float: "right"
+                            }}
+                            OnClick={() => {
+                                this.setState({
+                                    ...this.state, 
+                                    itemModal: false,
+                                })
+                                this.AddNewStage(this.preState.stageName)
+                            }}
+                        />
+                        <Button
+                            text="Anuluj"
+                            style={{
+                                float: "right"
+                            }}
+                            OnClick={() => {
+                                this.setState({...this.state, itemModal: false})
+                            }}
+                        />
+                    </div>
+                </Modal>
             </div>
         )
     }
