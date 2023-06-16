@@ -1,0 +1,81 @@
+.Hydra_TodoView_main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    * {
+        -webkit-app-region: no-drag !important;
+    }
+
+    .Hydra_TodoView_header {
+        position: relative;
+        display: block;
+        width: 98%;
+        height: 60px;
+        margin-bottom: 30px;
+
+        h1 {
+            position: relative;
+            display: block;
+            margin: 0;
+            width: 100%;
+            color: #4D4D4D;
+            font-size: 24px;
+            top: 50%;
+        }
+
+        & > button {
+            position: absolute;
+            right: 0;
+            svg {
+                stroke: rgba(30, 30, 30, 0.44);
+            }
+        }       
+        
+        & > button:hover {
+            svg {
+                fill: rgba(30, 30, 30, 0.24);
+            }
+        }
+    }
+
+    .Hydra_TodoView_area {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .Hydra_TodoView_workarea {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-left: 30px;
+
+            .Hydra_TodoView_workarea_item {
+                position: relative;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-bottom: 20px;
+                gap: 10px;
+
+                .Hydra_TodoView_workarea_item_checkbox {
+                    // padding-top: 20px;
+                    flex-shrink: 0;
+                    position: relative;
+                    box-sizing: content-box;
+                }
+
+                .Hydra_TodoView_workarea_item_text {
+                    color: #4D4D4D;
+
+                }
+            }
+
+        }
+
+    }
+}

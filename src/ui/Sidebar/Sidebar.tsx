@@ -13,6 +13,7 @@ import CalendarView from "../CalendarView/CalendarView";
 import Modal from "../Modal/Modal";
 import { InputText } from "../Inputs/Inputs";
 import ScrollArea from "../ScrollArea/Scrollarea";
+import TodoView from "../Todo/Todo";
 
 class SideBar extends React.Component {
     Sidebar = React.createRef<any>()
@@ -107,6 +108,11 @@ class SideBar extends React.Component {
                         />
                         <IconButton
                             Icon={ListIcon}
+                            OnClick={() => {
+                                if (window.addIfTab !== undefined) {
+                                    window.addIfTab("Todo", <TodoView/>)
+                                }
+                            }}
                         />.
                     </div> 
                     <div>

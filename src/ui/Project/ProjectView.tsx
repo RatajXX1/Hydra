@@ -29,7 +29,8 @@ class ProjectView extends React.Component<ProjectViewProps> {
 
     preState = {
         title: "",
-        stageName: ""
+        stageName: "",
+        desc: ""
     }
 
     state = {
@@ -42,7 +43,11 @@ class ProjectView extends React.Component<ProjectViewProps> {
     };
 
     private AddNewItem(title: string, desc:string) {
-
+        if (this.state.content[this.state.selectedColumn] !== undefined) {
+            this.state.content[this.state.selectedColumn]
+                .Content.push({title: title, desc: desc})
+            this.forceUpdate()
+        }
     }
 
     private AddNewStage(StageName: string) {
@@ -90,7 +95,7 @@ class ProjectView extends React.Component<ProjectViewProps> {
                                                     d => {
                                                         return (
                                                             <div>
-                                                                <span>simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+                                                                <span>{d.title}</span>
                                                                 <IconButton
                                                                     Icon={EditIcon}
                                                                 />
@@ -230,6 +235,9 @@ class ProjectView extends React.Component<ProjectViewProps> {
                         style={{
                             height: "200px"
                         }}
+                        OnChangeValue={(e) => {
+                            this.preState.desc = e.target.value
+                        }}
                     />
                     <div
                         style={{
@@ -247,7 +255,7 @@ class ProjectView extends React.Component<ProjectViewProps> {
                                     ...this.state, 
                                     itemModal: false,
                                 })
-                                this.AddNewStage(this.preState.stageName)
+                                this.AddNewItem(this.preState.stageName, this.preState.desc)
                             }}
                         />
                         <Button

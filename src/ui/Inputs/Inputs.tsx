@@ -63,6 +63,29 @@ function InputTextArea(props: TextAreaProps) {
     )
 }
 
+type CheckAreaProps = {
+    style?: React.CSSProperties,
+    placeholder?: string,
+    className?: string,
+    OnChangeValue?: (arg: React.ChangeEvent<HTMLTextAreaElement>) => void
+}
+
+function InputCheckBox(props: CheckAreaProps) {
+    const [Checked, setChecked] = React.useState(false)
+
+    return (
+        <div 
+            style={props.style != undefined ? props.style : undefined}  
+            className={"Hydra_Inputs_checkbox " + (props.className != undefined ? props.className : "")}
+            onClick={() => setChecked((preval) => !preval)}
+        >
+            {
+                Checked && <div></div>
+            }
+        </div>
+    )
+}
+
 class CalendarWidget extends React.Component {
     calendarbox = React.createRef<any>()
 
@@ -342,5 +365,6 @@ export {
     CalendarWidget,
     HourSelector,
     InputText,
-    InputTextArea
+    InputTextArea,
+    InputCheckBox
 }

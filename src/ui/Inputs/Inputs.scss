@@ -188,3 +188,23 @@
     }
 
 }
+
+.Hydra_Inputs_checkbox {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #1EBBFF;
+    border-radius: 5px;
+    cursor: pointer;
+    div {
+        position: relative;
+        left: 50%;
+        top: 50%;
+        width: 80%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        background-color: #1EBBFF;
+        border-radius: 5px;
+    }
+}
